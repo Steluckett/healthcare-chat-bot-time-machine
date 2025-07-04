@@ -906,7 +906,7 @@ Your entire response MUST be valid JSON and MUST include job IDs unless complete
             <button
               onClick={handleSendMessage}
               disabled={isLoading || !inputValue.trim()}
-              className="absolute right-4 top-6 text-white w-14 h-14 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl"
+              className="absolute right-4 top-5 text-white w-14 h-14 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl"
               style={{backgroundColor: 'rgb(0, 89, 148)'}}
             >
               <Send className="w-6 h-6" />
