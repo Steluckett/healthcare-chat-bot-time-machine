@@ -481,7 +481,7 @@ Your entire response MUST be valid JSON.`
   };
 
   return (
-    <div className="min-h-screen relative" style={{fontFamily: "'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+  <div className="min-h-screen relative bg-transparent" style={{fontFamily: "'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
       {/* Messages Container */}
       <div className="max-w-5xl mx-auto px-6 py-8 pb-40">
         
