@@ -917,7 +917,7 @@ Your entire response MUST be valid JSON and MUST include job IDs unless complete
 
       {/* Job Modal */}
       {showJobModal && selectedJob && (
-        <div className="fixed inset-0 bg-black/15 backdrop-blur-md flex items-center justify-center z-50 p-8">
+        <div className="fixed inset-0 bg-black/15 backdrop-blur-md flex items-center justify-center z-[9999] p-8">
           <div className="bg-white/95 backdrop-blur-md rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200/50">
             <div className="p-10">
               <div className="flex justify-between items-start mb-10">
