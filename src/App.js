@@ -397,17 +397,30 @@ const FreshJobsChat = () => {
     setIsLoading(true);
 
     try {
-      const prompt = `You are an AI assistant for Cygnet Group healthcare recruitment. The user said: "${inputValue}"
+      // OpenAI API call
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [
+            {
+              role: 'system',
+              content: `You are an AI assistant for Cygnet Group healthcare recruitment. You help people find healthcare jobs including mental health nursing, learning disabilities support, healthcare assistants, and clinical roles across the UK.
 
 Available jobs:
 ${JSON.stringify(sampleJobs, null, 2)}
 
-IMPORTANT: Keep your response concise and helpful. DO NOT list job details in your response - the job tiles will show all the details. Just provide brief, encouraging guidance.
-
-Examples of good responses:
-- "I found 3 roles that match your interests!"
-- "Here are some great opportunities for you."
-- "Based on your query, I've found some suitable positions."
+Guidelines:
+- Keep responses concise and helpful
+- Don't list job details in your response - job tiles will show the details
+- Provide brief, encouraging guidance
+- Match user queries to relevant job IDs
+- Be supportive and professional
+- Focus on UK healthcare opportunities
 
 Respond with a JSON object:
 {
@@ -415,10 +428,26 @@ Respond with a JSON object:
   "matchingJobs": [array of job IDs that match their query, or empty array if no specific search]
 }
 
-Your entire response MUST be valid JSON.`;
+Your entire response MUST be valid JSON.`
+            },
+            {
+              role: 'user',
+              content: inputValue
+            }
+          ],
+          max_tokens: 500,
+          temperature: 0.7,
+        }),
+      });
 
-      const response = await window.claude.complete(prompt);
-      const aiResponse = JSON.parse(response);
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error.message);
+      }
+
+      const aiResponseText = data.choices[0].message.content;
+      const aiResponse = JSON.parse(aiResponseText);
 
       const aiMessage = {
         id: Date.now() + 1,
