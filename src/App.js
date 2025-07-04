@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Send, MapPin, Clock, Briefcase, Sparkles, ArrowRight, User, Upload, FileText, X, Heart } from 'lucide-react';
 
 const FreshJobsChat = () => {
@@ -906,7 +907,7 @@ Your entire response MUST be valid JSON and MUST include job IDs unless complete
             <button
               onClick={handleSendMessage}
               disabled={isLoading || !inputValue.trim()}
-              className="absolute right-4 top-5 text-white w-14 h-14 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl"
+              className="absolute right-4 top-7 text-white w-14 h-14 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl"
               style={{backgroundColor: 'rgb(0, 89, 148)'}}
             >
               <Send className="w-6 h-6" />
@@ -916,8 +917,8 @@ Your entire response MUST be valid JSON and MUST include job IDs unless complete
       </div>
 
       {/* Job Modal */}
-      {showJobModal && selectedJob && (
-        <div className="fixed inset-0 bg-black/15 backdrop-blur-md flex items-center justify-center z-[9999] p-8">
+      {showJobModal && selectedJob && createPortal(
+        <div className="fixed inset-0 bg-black/15 backdrop-blur-md flex items-center justify-center p-8" style={{zIndex: 999999}}>
           <div className="bg-white/95 backdrop-blur-md rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200/50">
             <div className="p-10">
               <div className="flex justify-between items-start mb-10">
@@ -982,7 +983,8 @@ Your entire response MUST be valid JSON and MUST include job IDs unless complete
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
