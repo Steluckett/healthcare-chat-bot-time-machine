@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { Send, MapPin, Clock, Briefcase, Sparkles, ArrowRight, User, Upload, FileText, X, Heart } from 'lucide-react';
 
 const FreshJobsChat = () => {
@@ -917,8 +916,18 @@ Your entire response MUST be valid JSON and MUST include job IDs unless complete
       </div>
 
       {/* Job Modal */}
-      {showJobModal && selectedJob && createPortal(
-        <div className="fixed inset-0 bg-black/15 backdrop-blur-md flex items-center justify-center p-8" style={{zIndex: 999999}}>
+      {showJobModal && selectedJob && (
+        <div 
+          className="fixed inset-0 bg-black/15 backdrop-blur-md flex items-center justify-center p-8" 
+          style={{
+            zIndex: '999999999 !important',
+            position: 'fixed !important',
+            top: '0 !important',
+            left: '0 !important',
+            right: '0 !important',
+            bottom: '0 !important'
+          }}
+        >
           <div className="bg-white/95 backdrop-blur-md rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200/50">
             <div className="p-10">
               <div className="flex justify-between items-start mb-10">
@@ -983,8 +992,7 @@ Your entire response MUST be valid JSON and MUST include job IDs unless complete
               </div>
             </div>
           </div>
-        </div>,
-        document.body
+        </div>
       )}
     </div>
   );
