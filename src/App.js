@@ -397,7 +397,96 @@ const FreshJobsChat = () => {
     setIsLoading(true);
 
     try {
-      // OpenAI API call
+      // Enhanced system prompt with comprehensive Cygnet Group knowledge
+      const systemPrompt = `You are an experienced healthcare recruitment specialist working for Cygnet Group, the UK's leading independent provider of mental health and learning disabilities services. You have deep knowledge of healthcare careers and are genuinely passionate about helping people find meaningful work in healthcare.
+
+ABOUT CYGNET GROUP:
+- Leading independent provider of mental health and learning disabilities services in the UK
+- Over 150 services across England and Wales
+- Specializes in acute mental health, CAMHS, learning disabilities, neurological and complex care
+- Part of Universal Health Services (UHS) - Fortune 500 company
+- Award-winning employer with excellent training and career progression
+- Strong focus on person-centered care and recovery-focused approaches
+- Committed to staff development with comprehensive training programs
+- Offers competitive salaries, excellent benefits, and flexible working arrangements
+
+CONVERSATION STYLE:
+- Be warm, encouraging, and genuinely helpful
+- Ask follow-up questions to understand their situation better
+- Provide specific, actionable advice
+- Share insights about career progression in healthcare
+- Mention training opportunities and support available
+- Be empathetic about career transitions and challenges
+- Use a conversational, human tone (not robotic)
+- Show enthusiasm for healthcare careers
+
+KNOWLEDGE TO DEMONSTRATE:
+- Understanding of different healthcare roles and career paths
+- Knowledge of registration requirements (NMC, HCPC, etc.)
+- Awareness of salary ranges and benefits in healthcare
+- Understanding of the challenges and rewards of healthcare work
+- Knowledge of training pathways and career progression
+- Geographic considerations for healthcare jobs across the UK
+
+AVAILABLE JOBS:
+${JSON.stringify(sampleJobs, null, 2)}
+
+RESPONSE FORMAT:
+Respond with a JSON object containing:
+{
+  "response": "Your conversational, helpful response (be specific and encouraging)",
+  "matchingJobs": [array of job IDs that match their interests],
+  "followUpQuestions": [optional array of relevant questions to ask them]
+}
+
+GUIDELINES:
+- Keep responses conversational but informative (2-4 sentences)
+- Don't list job details - the job tiles will show those
+- Match user queries to relevant job IDs when appropriate
+- If they mention location, experience level, or specific interests, reference these
+- Offer specific next steps or advice
+- Be encouraging about their healthcare career journey
+- Ask relevant follow-up questions to better help them
+
+Your entire response MUST be valid JSON.`;
+
+      // Build conversation history for context
+      const buildConversationHistory = () => {
+        const conversationMessages = [];
+        
+        // Add system message
+        conversationMessages.push({
+          role: 'system',
+          content: systemPrompt
+        });
+        
+        // Add recent conversation history (last 6 messages to stay within token limits)
+        const recentMessages = messages.slice(-6);
+        
+        recentMessages.forEach(msg => {
+          if (msg.type === 'user') {
+            conversationMessages.push({
+              role: 'user',
+              content: msg.content
+            });
+          } else if (msg.type === 'ai' && msg.id !== 1) { // Skip initial greeting
+            conversationMessages.push({
+              role: 'assistant',
+              content: msg.content
+            });
+          }
+        });
+        
+        // Add current user message
+        conversationMessages.push({
+          role: 'user',
+          content: inputValue
+        });
+        
+        return conversationMessages;
+      };
+
+      // Enhanced OpenAI API call
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -405,38 +494,13 @@ const FreshJobsChat = () => {
           'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            {
-              role: 'system',
-              content: `You are an AI assistant for Cygnet Group healthcare recruitment. You help people find healthcare jobs including mental health nursing, learning disabilities support, healthcare assistants, and clinical roles across the UK.
-
-Available jobs:
-${JSON.stringify(sampleJobs, null, 2)}
-
-Guidelines:
-- Keep responses concise and helpful
-- Don't list job details in your response - job tiles will show the details
-- Provide brief, encouraging guidance
-- Match user queries to relevant job IDs
-- Be supportive and professional
-- Focus on UK healthcare opportunities
-
-Respond with a JSON object:
-{
-  "response": "Brief, encouraging message (no job details or lists)",
-  "matchingJobs": [array of job IDs that match their query, or empty array if no specific search]
-}
-
-Your entire response MUST be valid JSON.`
-            },
-            {
-              role: 'user',
-              content: inputValue
-            }
-          ],
-          max_tokens: 500,
-          temperature: 0.7,
+          model: 'gpt-4o-mini', // Better model for conversational responses
+          messages: buildConversationHistory(),
+          max_tokens: 800, // Increased for more detailed responses
+          temperature: 0.8, // Higher for more conversational tone
+          top_p: 0.9, // Adds creativity while maintaining coherence
+          frequency_penalty: 0.1, // Reduces repetition
+          presence_penalty: 0.1, // Encourages topic diversity
         }),
       });
 
@@ -447,24 +511,49 @@ Your entire response MUST be valid JSON.`
       }
 
       const aiResponseText = data.choices[0].message.content;
-      const aiResponse = JSON.parse(aiResponseText);
+      
+      // Parse JSON response
+      let aiResponse;
+      try {
+        aiResponse = JSON.parse(aiResponseText);
+      } catch (parseError) {
+        // Fallback if JSON parsing fails
+        console.warn('Failed to parse AI response as JSON:', aiResponseText);
+        aiResponse = {
+          response: aiResponseText,
+          matchingJobs: [],
+          followUpQuestions: []
+        };
+      }
 
       const aiMessage = {
         id: Date.now() + 1,
         type: 'ai',
         content: aiResponse.response,
         matchingJobs: aiResponse.matchingJobs || [],
+        followUpQuestions: aiResponse.followUpQuestions || [],
         timestamp: new Date()
       };
 
       setMessages(prev => [...prev, aiMessage]);
+
+      // Optional: If there are follow-up questions, you could display them as quick action buttons
+      // This would require additional UI components to show the follow-up questions
+
     } catch (error) {
       console.error('Error getting AI response:', error);
+      
+      // Enhanced fallback response
       const errorMessage = {
         id: Date.now() + 1,
         type: 'ai',
-        content: "I'd be happy to help you explore healthcare opportunities at Cygnet Group. Let me show you some relevant positions.",
-        matchingJobs: [1, 2, 3], // Show first few jobs as fallback
+        content: "I'm here to help you explore exciting healthcare opportunities at Cygnet Group! We have roles across mental health, learning disabilities, and healthcare support. What type of position interests you most, or would you like to know more about career progression in healthcare?",
+        matchingJobs: [1, 2, 3], // Show sample jobs as fallback
+        followUpQuestions: [
+          "What's your current experience level in healthcare?",
+          "Are you looking for roles in a specific location?",
+          "Would you like to know about our training programs?"
+        ],
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
@@ -481,7 +570,7 @@ Your entire response MUST be valid JSON.`
   };
 
   return (
-  <div className="min-h-screen relative bg-transparent" style={{fontFamily: "'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+    <div className="min-h-screen relative bg-transparent" style={{fontFamily: "'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
       {/* Messages Container */}
       <div className="max-w-5xl mx-auto px-6 py-8 pb-40">
         
