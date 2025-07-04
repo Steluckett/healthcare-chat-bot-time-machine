@@ -655,7 +655,13 @@ Your entire response MUST be valid JSON and MUST include job IDs unless complete
 
         <div className="space-y-12">
           {messages.map((message) => (
-            <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div 
+              key={message.id} 
+              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+              style={{
+                paddingTop: message.id === 1 ? '160px' : '0px'
+              }}
+            >
               <div className={`max-w-4xl ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
                 <div className={`flex items-start space-x-4 ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                   {/* Avatar */}
