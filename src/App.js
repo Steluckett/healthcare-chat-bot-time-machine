@@ -928,7 +928,7 @@ Your entire response MUST be valid JSON and MUST include job IDs unless complete
             bottom: '0 !important'
           }}
         >
-          <div className="bg-white/95 backdrop-blur-md rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200/50">
+          <div className="bg-white/95 backdrop-blur-md rounded-3xl max-w-3xl w-full max-h-[70vh] overflow-y-auto shadow-2xl border border-gray-200/50">
             <div className="p-10">
               <div className="flex justify-between items-start mb-10">
                 <div>
