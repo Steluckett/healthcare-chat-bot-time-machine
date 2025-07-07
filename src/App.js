@@ -397,7 +397,7 @@ const FreshJobsChat = () => {
     setIsLoading(true);
 
     try {
-      // Enhanced system prompt with mandatory job matching
+      // Enhanced system prompt with flexible job matching
       const systemPrompt = `You are an experienced healthcare recruitment specialist working for Cygnet Group, the UK's leading independent provider of mental health and learning disabilities services. You have deep knowledge of healthcare careers and are genuinely passionate about helping people find meaningful work in healthcare.
 
 ABOUT CYGNET GROUP:
@@ -413,47 +413,78 @@ ABOUT CYGNET GROUP:
 AVAILABLE JOBS:
 ${JSON.stringify(sampleJobs, null, 2)}
 
-CRITICAL INSTRUCTION - ALWAYS SHOW JOBS:
-You MUST always include relevant job IDs in your response. Even for general questions, show the most relevant jobs. Never respond without showing job tiles unless the user is asking something completely unrelated to careers (like asking about the weather).
+WHEN TO SHOW JOBS:
+Show job IDs when the user is asking about:
+- Specific roles or job types
+- Career opportunities or job searching
+- Salary, benefits, or working conditions
+- Training or qualifications needed
+- Locations for work
+- "What jobs are available" or similar
 
-JOB MATCHING RULES:
+DO NOT show jobs when the user is asking about:
+- General company information (history, services, values)
+- How to apply or application process
+- General healthcare industry questions
+- Personal experiences or stories
+- Casual greetings or thanks
+- Non-career related topics
+
+JOB MATCHING RULES (when jobs should be shown):
 - If they mention "mental health" or "nursing" → show jobs 1, 3, 5 (Mental Health Nurse, Clinical Psychologist, Mental Health Support Worker)
 - If they mention "support worker" or "learning disabilities" → show jobs 2, 5 (Support Worker LD, Mental Health Support Worker)
 - If they mention "entry level", "no experience", "new to healthcare" → show jobs 2, 4, 5 (Support Worker, Healthcare Assistant, Mental Health Support Worker)
 - If they mention "clinical", "psychologist", "therapy" → show jobs 3, 6 (Clinical Psychologist, Occupational Therapist)
 - If they mention "part-time" or "flexible" → show jobs 4, 6 (Healthcare Assistant, Occupational Therapist)
 - If they mention specific locations → show jobs in/near that location
-- If they ask general questions about careers → show jobs 1, 2, 4 (mix of different levels)
 - If they ask about salary/benefits → show jobs 1, 3, 6 (different salary ranges)
 - If they ask about training → show jobs 2, 4, 5 (mention training provided)
-- For ANY career-related question → show at least 2-3 relevant jobs
 
 CONVERSATION STYLE:
 - Be warm, encouraging, and genuinely helpful
-- Keep responses to 2-3 sentences maximum
+- Keep responses to 2-3 sentences maximum unless explaining company info
 - Don't list job details - the job tiles will show everything
-- Always be enthusiastic about showing opportunities
+- Be enthusiastic about opportunities when relevant
 - Ask one follow-up question to keep conversation flowing
 
 RESPONSE FORMAT:
 Respond with a JSON object containing:
 {
   "response": "Brief, encouraging response (2-3 sentences max)",
-  "matchingJobs": [REQUIRED - array of job IDs that match their query - minimum 2-3 jobs unless completely unrelated to careers],
+  "matchingJobs": [array of job IDs that match their query - ONLY if they're asking about jobs/careers],
   "followUpQuestions": [optional single follow-up question]
 }
 
 EXAMPLES:
 User: "I'm thinking about healthcare" → Show jobs [1,2,4] + encouraging response
 User: "What's the salary like?" → Show jobs [1,3,6] + mention salary ranges vary
+User: "Tell me about Cygnet Group" → NO jobs, just company info
+User: "How do I apply?" → NO jobs, just application process info
+User: "What services does Cygnet provide?" → NO jobs, just services info
 User: "Tell me about mental health roles" → Show jobs [1,3,5] + brief mental health info
-User: "I'm new to this field" → Show jobs [2,4,5] + mention training provided
 
-Your entire response MUST be valid JSON and MUST include job IDs unless completely unrelated to careers.`;
+Your entire response MUST be valid JSON. Only include job IDs when the user is specifically asking about careers or job opportunities.`;
 
       // Analyze user input for job matching (backup logic)
       const analyzeUserInput = (input) => {
         const lowerInput = input.toLowerCase();
+        
+        // Check if this is a job/career-related query
+        const isJobQuery = lowerInput.includes('job') || lowerInput.includes('role') || 
+                          lowerInput.includes('position') || lowerInput.includes('career') || 
+                          lowerInput.includes('work') || lowerInput.includes('salary') || 
+                          lowerInput.includes('training') || lowerInput.includes('qualification') ||
+                          lowerInput.includes('nurse') || lowerInput.includes('support worker') ||
+                          lowerInput.includes('healthcare') || lowerInput.includes('opportunity') ||
+                          lowerInput.includes('hiring') || lowerInput.includes('vacancy') ||
+                          lowerInput.includes('apply') || lowerInput.includes('mental health') ||
+                          lowerInput.includes('learning disabilit') || lowerInput.includes('clinical');
+        
+        // If not a job query, return empty array
+        if (!isJobQuery) {
+          return [];
+        }
+        
         let suggestedJobs = [];
         
         // Mental health related
@@ -492,10 +523,6 @@ Your entire response MUST be valid JSON and MUST include job IDs unless complete
         // General healthcare/career questions
         else if (lowerInput.includes('healthcare') || lowerInput.includes('career') || lowerInput.includes('job') || lowerInput.includes('work') || lowerInput.includes('role') || lowerInput.includes('position') || lowerInput.includes('opportunity') || lowerInput.includes('salary') || lowerInput.includes('training') || lowerInput.includes('qualification')) {
           suggestedJobs = [1, 2, 4]; // Good mix of different levels
-        }
-        // Default fallback - show variety
-        else {
-          suggestedJobs = [1, 2, 4]; // Default mix
         }
         
         return suggestedJobs;
@@ -578,16 +605,14 @@ Your entire response MUST be valid JSON and MUST include job IDs unless complete
         };
       }
 
-      // Ensure we always have jobs to show (backup safety net)
+      // Ensure we show jobs only when relevant (updated backup safety net)
       if (!aiResponse.matchingJobs || aiResponse.matchingJobs.length === 0) {
         console.log('No jobs in AI response, applying backup logic');
         aiResponse.matchingJobs = analyzeUserInput(inputValue);
       }
 
-      // Final safety net - if still no jobs, show default mix
-      if (!aiResponse.matchingJobs || aiResponse.matchingJobs.length === 0) {
-        aiResponse.matchingJobs = [1, 2, 4]; // Default variety
-      }
+      // Remove the final safety net that always shows jobs
+      // Only show jobs if the user is actually asking about careers/jobs
 
       const aiMessage = {
         id: Date.now() + 1,
@@ -603,15 +628,15 @@ Your entire response MUST be valid JSON and MUST include job IDs unless complete
     } catch (error) {
       console.error('Error getting AI response:', error);
       
-      // Enhanced fallback with guaranteed job matching
+      // Enhanced fallback with flexible job matching
       const fallbackJobs = analyzeUserInput(inputValue);
       
       const errorMessage = {
         id: Date.now() + 1,
         type: 'ai',
-        content: "I'm here to help you explore exciting healthcare opportunities at Cygnet Group! Here are some great roles that might interest you based on what you're looking for.",
-        matchingJobs: fallbackJobs.length > 0 ? fallbackJobs : [1, 2, 4], // Always show jobs
-        followUpQuestions: ["What type of healthcare role interests you most?"],
+        content: "I'm here to help you with information about Cygnet Group and our healthcare opportunities. What would you like to know?",
+        matchingJobs: fallbackJobs, // Only show jobs if it's a job-related query
+        followUpQuestions: ["Are you interested in learning about our available roles?"],
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
