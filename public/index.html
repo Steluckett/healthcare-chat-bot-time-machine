@@ -540,3 +540,187 @@
                                                                                 <span key={index} className="job-card-skill">
                                                                                     {skill}
                                                                                 </span>
+                                                                            ))}
+                                                                        </div>
+                                                                        
+                                                                        <div className="job-card-footer">
+                                                                            <div className="job-card-salary">{job.salary}</div>
+                                                                            <button
+                                                                                onClick={() => handleJobClick(job)}
+                                                                                className="job-card-view-btn"
+                                                                            >
+                                                                                <span>View Details</span>
+                                                                                <ArrowRight className="job-card-view-icon" />
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                
+                                                {/* Timestamp */}
+                                                <div className={`message-timestamp ${message.type}`}>
+                                                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                            
+                            {/* Loading indicator */}
+                            {isLoading && (
+                                <div className="loading-container">
+                                    <div className="loading-layout">
+                                        <div className="avatar ai">
+                                            <Sparkles className="avatar-icon" />
+                                        </div>
+                                        <div className="loading-bubble">
+                                            <div className="loading-dots">
+                                                <div className="loading-dot"></div>
+                                                <div className="loading-dot"></div>
+                                                <div className="loading-dot"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            <div ref={messagesEndRef} />
+                        </div>
+                    </div>
+
+                    {/* Fixed Input */}
+                    <div className="input-container">
+                        <div className="input-wrapper">
+                            <div className="input-relative">
+                                <textarea
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    onKeyPress={handleKeyPress}
+                                    placeholder="Ask about healthcare roles, locations, or get career advice..."
+                                    className="input-textarea"
+                                    rows="1"
+                                    disabled={isLoading}
+                                    onInput={(e) => {
+                                        e.target.style.height = 'auto';
+                                        e.target.style.height = Math.min(e.target.scrollHeight, 140) + 'px';
+                                    }}
+                                />
+                                
+                                {/* Hidden file input */}
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept=".pdf,.docx,.doc,.txt"
+                                    onChange={handleFileSelect}
+                                    className="file-input"
+                                />
+                                
+                                {/* CV Upload Button */}
+                                <button
+                                    onClick={() => fileInputRef.current?.click()}
+                                    disabled={isLoading}
+                                    className="upload-btn"
+                                    onMouseEnter={() => setShowTooltip(true)}
+                                    onMouseLeave={() => setShowTooltip(false)}
+                                >
+                                    <Upload className="upload-btn-icon" />
+                                </button>
+                                
+                                {/* Tooltip */}
+                                {showTooltip && (
+                                    <div className="tooltip">
+                                        Share your CV and I'll find the best role matches for you
+                                    </div>
+                                )}
+                                
+                                {/* Send Button */}
+                                <button
+                                    onClick={handleSendMessage}
+                                    disabled={isLoading || !inputValue.trim()}
+                                    className="send-btn"
+                                >
+                                    <Send className="send-btn-icon" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Job Modal */}
+                    {showJobModal && selectedJob && (
+                        <div className="modal-overlay">
+                            <div className="modal-content">
+                                <div className="modal-inner">
+                                    <div className="modal-header">
+                                        <div className="modal-header-content">
+                                            <div className="modal-category">
+                                                {selectedJob.category}
+                                            </div>
+                                            <h2 className="modal-title">{selectedJob.title}</h2>
+                                            <p className="modal-company">{selectedJob.company}</p>
+                                        </div>
+                                        <button
+                                            onClick={closeJobModal}
+                                            className="modal-close"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+
+                                    <div className="modal-body">
+                                        <div className="modal-meta">
+                                            <span className="modal-meta-item">
+                                                <MapPin className="modal-meta-icon" />
+                                                {selectedJob.location}
+                                            </span>
+                                            <span className="modal-meta-item">
+                                                <Briefcase className="modal-meta-icon" />
+                                                {selectedJob.type}
+                                            </span>
+                                            <span className="modal-meta-item">
+                                                <Clock className="modal-meta-icon" />
+                                                {selectedJob.posted}
+                                            </span>
+                                        </div>
+
+                                        <div className="modal-salary">{selectedJob.salary}</div>
+
+                                        <div className="modal-skills">
+                                            {selectedJob.skills.map((skill, index) => (
+                                                <span key={index} className="modal-skill">
+                                                    {skill}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="modal-description-section">
+                                        <h3 className="modal-description-title">Job Description</h3>
+                                        <div className="modal-description-text">
+                                            {selectedJob.fullDescription || selectedJob.description}
+                                        </div>
+                                    </div>
+
+                                    <div className="modal-footer">
+                                        <button
+                                            onClick={() => handleApply(selectedJob)}
+                                            className="modal-apply-btn"
+                                        >
+                                            <span>Apply Now</span>
+                                            <ArrowRight className="modal-apply-icon" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        ReactDOM.render(<FreshJobsChat />, document.getElementById('root'));
+    </script>
+</body>
+</html>
