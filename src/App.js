@@ -887,7 +887,7 @@ Your entire response MUST be valid JSON and MUST include job IDs unless complete
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={isLoading}
-              className="absolute right-20 top-7 text-gray-500 hover:text-gray-700 w-12 h-12 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center hover:bg-gray-50"
+              className="absolute right-20 top-5 text-gray-500 hover:text-gray-700 w-12 h-12 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center hover:bg-gray-50"
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
             >
