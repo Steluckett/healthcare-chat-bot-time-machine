@@ -3,88 +3,540 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Healthcare Chat Bot</title>
-    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    <title>Fresh Jobs Chat - Cygnet Group Careers</title>
+    
+    <!-- External Dependencies -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Local Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Lucide Icons (Simple SVG Icons) -->
+    <script>
+        // Simple icon components to replace Lucide
+        const iconSvgs = {
+            Send: `<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>`,
+            MapPin: `<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>`,
+            Clock: `<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>`,
+            Briefcase: `<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg>`,
+            Sparkles: `<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>`,
+            ArrowRight: `<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`,
+            User: `<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+            Upload: `<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,5 17,10"/><line x1="12" x2="12" y1="5" y2="15"/></svg>`,
+            FileText: `<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`,
+            X: `<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`,
+            Heart: `<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5Z"/></svg>`
+        };
+
+        // Simple icon component generator
+        function createIcon(name, className = '') {
+            return React.createElement('span', {
+                className: className,
+                dangerouslySetInnerHTML: { __html: iconSvgs[name] }
+            });
         }
-        
-        body {
-            font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: transparent;
-            min-height: 100vh;
-        }
-        
-        #root {
-            width: 100%;
-            min-height: 100vh;
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-        
-        /* Animation for loading dots */
-        @keyframes bounce {
-            0%, 20%, 53%, 80%, 100% {
-                transform: translate3d(0,0,0);
-            }
-            40%, 43% {
-                transform: translate3d(0, -8px, 0);
-            }
-            70% {
-                transform: translate3d(0, -4px, 0);
-            }
-            90% {
-                transform: translate3d(0, -2px, 0);
-            }
-        }
-        
-        .animate-bounce {
-            animation: bounce 1.4s ease-in-out infinite;
-        }
-        
-        /* Line clamp utility */
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .max-w-5xl {
-                max-width: 100%;
-            }
-            
-            .px-6 {
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-        }
-    </style>
+
+        // Export icons for use in React
+        window.Icons = {
+            Send: (props) => createIcon('Send', props.className),
+            MapPin: (props) => createIcon('MapPin', props.className),
+            Clock: (props) => createIcon('Clock', props.className),
+            Briefcase: (props) => createIcon('Briefcase', props.className),
+            Sparkles: (props) => createIcon('Sparkles', props.className),
+            ArrowRight: (props) => createIcon('ArrowRight', props.className),
+            User: (props) => createIcon('User', props.className),
+            Upload: (props) => createIcon('Upload', props.className),
+            FileText: (props) => createIcon('FileText', props.className),
+            X: (props) => createIcon('X', props.className),
+            Heart: (props) => createIcon('Heart', props.className)
+        };
+    </script>
+    
+    <!-- Jobs Data -->
+    <script src="jobsData.js"></script>
 </head>
 <body>
     <div id="root"></div>
-</body>
-</html>
+
+    <script type="text/babel">
+        const { useState, useRef, useEffect } = React;
+        const { Send, MapPin, Clock, Briefcase, Sparkles, ArrowRight, User, Upload, FileText, X, Heart } = window.Icons;
+
+        const FreshJobsChat = () => {
+            const [messages, setMessages] = useState([
+                {
+                    id: 1,
+                    type: 'ai',
+                    content: "Hello! I'm your AI assistant for Cygnet Group healthcare careers. I can help you discover mental health, learning disabilities, and healthcare support roles across the UK. What type of position interests you today?",
+                    timestamp: new Date()
+                }
+            ]);
+            const [inputValue, setInputValue] = useState('');
+            const [jobs, setJobs] = useState([]);
+            const [isLoading, setIsLoading] = useState(false);
+            const [selectedJob, setSelectedJob] = useState(null);
+            const [showJobModal, setShowJobModal] = useState(false);
+            const [userCV, setUserCV] = useState(null);
+            const [showTooltip, setShowTooltip] = useState(false);
+            const messagesEndRef = useRef(null);
+            const fileInputRef = useRef(null);
+
+            // Use jobs data from external file
+            const sampleJobs = window.jobsData;
+            const cityCoordinates = window.cityCoordinates;
+
+            // Calculate distance between two points using Haversine formula
+            const calculateDistance = (lat1, lng1, lat2, lng2) => {
+                const R = 3959; // Earth's radius in miles
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLng = (lng2 - lng1) * Math.PI / 180;
+                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                          Math.sin(dLng/2) * Math.sin(dLng/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c;
+            };
+
+            // Find jobs within specified radius of user's location
+            const findJobsWithinRadius = (userLocation, maxDistance = 30) => {
+                const userCoords = cityCoordinates[userLocation.toLowerCase()];
+                if (!userCoords) return [];
+
+                const jobsWithDistance = sampleJobs.map(job => {
+                    const jobLocation = job.location.split(',')[0].toLowerCase();
+                    const jobCoords = cityCoordinates[jobLocation];
+                    
+                    if (!jobCoords) return null;
+                    
+                    const distance = calculateDistance(
+                        userCoords.lat, userCoords.lng,
+                        jobCoords.lat, jobCoords.lng
+                    );
+                    
+                    return {
+                        ...job,
+                        distance: Math.round(distance),
+                        withinRadius: distance <= maxDistance
+                    };
+                }).filter(job => job !== null);
+
+                return jobsWithDistance;
+            };
+
+            // Extract location from filename or CV content
+            const extractLocation = (filename, cvContent = '') => {
+                const lowerFilename = filename.toLowerCase();
+                const lowerContent = cvContent.toLowerCase();
+                const locations = Object.keys(cityCoordinates);
+                
+                // First try CV content (more reliable)
+                if (cvContent) {
+                    for (const location of locations) {
+                        if (lowerContent.includes(location)) {
+                            return location;
+                        }
+                    }
+                }
+                
+                // Fallback to filename
+                for (const location of locations) {
+                    if (lowerFilename.includes(location)) {
+                        return location;
+                    }
+                }
+                
+                return null;
+            };
+
+            // Simple CV text extraction and qualification analysis
+            const extractCVText = (file) => {
+                const filename = file.name.toLowerCase();
+                
+                // Simulate reading CV content based on filename
+                if (filename.includes('jane') || filename.includes('nurse') || filename.includes('stockport')) {
+                    return 'Jane Doe Address: 21 Meadow Lane, Stockport, SK4 2AA Registered Mental Health Nurse NMC PIN: RM12345678 experience mental health nursing acute inpatient ward Senior Mental Health Nurse 5 years experience';
+                }
+                
+                return '';
+            };
+
+            // Analyze qualifications from CV content
+            const analyzeQualifications = (cvContent) => {
+                const content = cvContent.toLowerCase();
+                
+                // Check for nursing qualifications
+                const isQualifiedNurse = content.includes('nmc') || content.includes('registered nurse') || content.includes('nmc pin');
+                const isMentalHealthNurse = content.includes('mental health nurse') || content.includes('mental health nursing');
+                const isSeniorNurse = content.includes('senior') || content.includes('lead nurse') || content.includes('years experience');
+                
+                // Check for other qualifications
+                const isHCA = content.includes('healthcare assistant') || content.includes('hca');
+                const isSupportWorker = content.includes('support worker') && !isQualifiedNurse;
+                const isNewGrad = content.includes('newly qualified') || content.includes('new graduate');
+                
+                return {
+                    isQualifiedNurse,
+                    isMentalHealthNurse,
+                    isSeniorNurse,
+                    isHCA,
+                    isSupportWorker,
+                    isNewGrad,
+                    experienceLevel: isSeniorNurse ? 'senior' : isQualifiedNurse ? 'qualified' : 'entry-level'
+                };
+            };
+
+            // Filter jobs based on qualifications and location
+            const filterJobsByQualifications = (jobs, qualifications) => {
+                return jobs.filter(job => {
+                    const jobTitle = job.title.toLowerCase();
+                    const jobCategory = job.category.toLowerCase();
+                    
+                    // For qualified nurses
+                    if (qualifications.isQualifiedNurse) {
+                        // Only show nursing roles, clinical roles, or senior positions
+                        return jobTitle.includes('nurse') || 
+                               jobTitle.includes('clinical') || 
+                               jobTitle.includes('psychologist') ||
+                               jobCategory.includes('mental health') && !jobTitle.includes('support worker');
+                    }
+                    
+                    // For healthcare assistants
+                    if (qualifications.isHCA) {
+                        // Show HCA roles and nursing roles (career progression)
+                        return jobTitle.includes('healthcare assistant') || 
+                               jobTitle.includes('nurse') ||
+                               jobTitle.includes('support worker');
+                    }
+                    
+                    // For support workers
+                    if (qualifications.isSupportWorker) {
+                        // Show support worker roles and HCA roles (career progression)
+                        return jobTitle.includes('support worker') || 
+                               jobTitle.includes('healthcare assistant');
+                    }
+                    
+                    // For entry-level/no healthcare experience
+                    // Only show entry-level roles
+                    return jobTitle.includes('support worker') || 
+                           jobTitle.includes('healthcare assistant') ||
+                           jobTitle.includes('apprentice') ||
+                           jobTitle.includes('trainee');
+                });
+            };
+
+            const scrollToMessage = () => {
+                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            };
+
+            useEffect(() => {
+                scrollToMessage();
+            }, [messages]);
+
+            useEffect(() => {
+                setJobs(sampleJobs);
+            }, []);
+
+            const handleJobClick = (job) => {
+                setSelectedJob(job);
+                setShowJobModal(true);
+            };
+
+            const closeJobModal = () => {
+                setShowJobModal(false);
+                setSelectedJob(null);
+            };
+
+            const handleApply = (job) => {
+                const url = job.applyUrl || 'https://apply.cygnetgroup.com/';
+                window.open(url, '_blank', 'noopener,noreferrer');
+            };
+
+            const handleFileSelect = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    setUserCV(file);
+                    setIsLoading(true);
+                    
+                    const userMessage = {
+                        id: Date.now(),
+                        type: 'user',
+                        content: `I've uploaded my CV: ${file.name}`,
+                        timestamp: new Date()
+                    };
+                    setMessages(prev => [...prev, userMessage]);
+                    
+                    // Simulate CV analysis with realistic processing time
+                    setTimeout(() => {
+                        try {
+                            // Extract location and analyze qualifications
+                            const cvText = extractCVText(file);
+                            const userLocation = extractLocation(file.name, cvText);
+                            const qualifications = analyzeQualifications(cvText);
+                            
+                            let matchingJobs = [];
+                            let responseMessage = '';
+                            
+                            if (userLocation) {
+                                // Find jobs within 30 miles using actual geographic calculations
+                                const jobsWithDistance = findJobsWithinRadius(userLocation, 30);
+                                const nearbyJobs = jobsWithDistance.filter(job => job.withinRadius);
+                                
+                                // Filter jobs based on qualifications
+                                const qualifiedJobs = filterJobsByQualifications(nearbyJobs, qualifications);
+                                
+                                if (qualifiedJobs.length > 0) {
+                                    matchingJobs = qualifiedJobs.map(job => job.id);
+                                    
+                                    // Customize message based on qualification level
+                                    if (qualifications.isQualifiedNurse) {
+                                        responseMessage = `Perfect! I found ${qualifiedJobs.length} nursing role${qualifiedJobs.length > 1 ? 's' : ''} in your area that match your professional qualifications.`;
+                                    } else if (qualifications.isHCA) {
+                                        responseMessage = `Great! I found ${qualifiedJobs.length} suitable role${qualifiedJobs.length > 1 ? 's' : ''} in your area.`;
+                                    } else {
+                                        responseMessage = `Excellent! I found ${qualifiedJobs.length} entry-level role${qualifiedJobs.length > 1 ? 's' : ''} in your area with full training provided.`;
+                                    }
+                                } else if (nearbyJobs.length > 0) {
+                                    // Jobs nearby but not suitable for qualification level
+                                    responseMessage = `I found some roles in your area, but they don't quite match your experience level. Would you like to see what's available in nearby areas?`;
+                                } else {
+                                    // No jobs within 30 miles
+                                    responseMessage = `I don't currently have any suitable roles within 30 miles of ${userLocation.charAt(0).toUpperCase() + userLocation.slice(1)}. Would you be interested in exploring opportunities further away?`;
+                                }
+                            } else {
+                                // Location not detected, show general message
+                                responseMessage = "Thank you for uploading your CV! I couldn't detect your location from the filename. Could you tell me which area you're looking for work in so I can show you the most relevant opportunities?";
+                            }
+                            
+                            const aiMessage = {
+                                id: Date.now() + 1,
+                                type: 'ai',
+                                content: responseMessage,
+                                matchingJobs: matchingJobs,
+                                locationDetected: userLocation,
+                                nearbyJobs: matchingJobs.length > 0,
+                                timestamp: new Date()
+                            };
+                            
+                            setMessages(prev => [...prev, aiMessage]);
+                        } catch (error) {
+                            console.error('Error processing CV:', error);
+                            const aiMessage = {
+                                id: Date.now() + 1,
+                                type: 'ai',
+                                content: "Thank you for uploading your CV! I'd be happy to help you find suitable healthcare roles. Could you tell me which area you're looking for work in?",
+                                matchingJobs: [],
+                                timestamp: new Date()
+                            };
+                            setMessages(prev => [...prev, aiMessage]);
+                        }
+                        
+                        setIsLoading(false);
+                    }, 1500);
+                }
+            };
+
+            const handleSendMessage = () => {
+                if (!inputValue.trim()) return;
+
+                const userMessage = {
+                    id: Date.now(),
+                    type: 'user',
+                    content: inputValue,
+                    timestamp: new Date()
+                };
+
+                setMessages(prev => [...prev, userMessage]);
+                setInputValue('');
+                setIsLoading(true);
+
+                // Simulate AI response with job matching
+                setTimeout(() => {
+                    const aiMessage = {
+                        id: Date.now() + 1,
+                        type: 'ai',
+                        content: "I'd be happy to help you explore healthcare opportunities at Cygnet Group! Here are some roles that might interest you based on your inquiry.",
+                        matchingJobs: [1, 2, 4], // Show some sample jobs
+                        timestamp: new Date()
+                    };
+                    setMessages(prev => [...prev, aiMessage]);
+                    setIsLoading(false);
+                }, 1000);
+            };
+
+            const handleKeyPress = (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                }
+            };
+
+            return (
+                <div className="chat-container">
+                    {/* Messages Container */}
+                    <div className="messages-container">
+                        
+                        {/* CV Status */}
+                        {userCV && (
+                            <div className="cv-status">
+                                <div className="cv-status-content">
+                                    <FileText className="cv-status-icon" />
+                                    <div>
+                                        <p className="cv-status-text">{userCV.name}</p>
+                                        <p className="cv-status-subtext">
+                                            CV uploaded and analyzed
+                                        </p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setUserCV(null)}
+                                    className="cv-status-close"
+                                >
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+                        )}
+
+                        <div className="messages-list">
+                            {messages.map((message) => (
+                                <div 
+                                    key={message.id} 
+                                    className={`message-wrapper ${message.type} ${message.id === 1 ? 'initial' : ''}`}
+                                >
+                                    <div className={`message-content ${message.type}`}>
+                                        <div className={`message-layout ${message.type}`}>
+                                            {/* Avatar */}
+                                            <div className={`avatar ${message.type}`}>
+                                                {message.type === 'ai' ? (
+                                                    <Sparkles className="avatar-icon" />
+                                                ) : (
+                                                    <User className="avatar-icon user" />
+                                                )}
+                                            </div>
+                                            
+                                            {/* Message Content */}
+                                            <div className="flex-1">
+                                                <div className={`message-bubble ${message.type}`}>
+                                                    <div className="message-text">
+                                                        {message.content}
+                                                    </div>
+                                                    
+                                                    {/* Quick Action Prompts - only show after initial message */}
+                                                    {message.id === 1 && (
+                                                        <div className="quick-actions">
+                                                            <p className="quick-actions-intro">
+                                                                Choose an option to get started:
+                                                            </p>
+                                                            <div className="quick-actions-grid">
+                                                                <button
+                                                                    onClick={() => fileInputRef.current?.click()}
+                                                                    className="quick-action-btn"
+                                                                >
+                                                                    <div className="quick-action-content">
+                                                                        <Upload className="quick-action-icon upload" />
+                                                                        <div>
+                                                                            <h4 className="quick-action-title">Upload Your CV</h4>
+                                                                            <p className="quick-action-description">
+                                                                                Get personalized job matches based on your experience
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </button>
+                                                                
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setInputValue("I'm looking for mental health nursing roles");
+                                                                        document.querySelector('.input-textarea').focus();
+                                                                    }}
+                                                                    className="quick-action-btn"
+                                                                >
+                                                                    <div className="quick-action-content">
+                                                                        <Heart className="quick-action-icon mental-health" />
+                                                                        <div>
+                                                                            <h4 className="quick-action-title">Mental Health Roles</h4>
+                                                                            <p className="quick-action-description">
+                                                                                Explore nursing and support positions in mental health
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </button>
+                                                                
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setInputValue("Show me support worker positions for learning disabilities");
+                                                                        document.querySelector('.input-textarea').focus();
+                                                                    }}
+                                                                    className="quick-action-btn"
+                                                                >
+                                                                    <div className="quick-action-content">
+                                                                        <User className="quick-action-icon support" />
+                                                                        <div>
+                                                                            <h4 className="quick-action-title">Support Worker Roles</h4>
+                                                                            <p className="quick-action-description">
+                                                                                Find opportunities in learning disabilities support
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </button>
+                                                                
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setInputValue("I'm new to healthcare - what entry level positions are available?");
+                                                                        document.querySelector('.input-textarea').focus();
+                                                                    }}
+                                                                    className="quick-action-btn"
+                                                                >
+                                                                    <div className="quick-action-content">
+                                                                        <Sparkles className="quick-action-icon entry-level" />
+                                                                        <div>
+                                                                            <h4 className="quick-action-title">New to Healthcare</h4>
+                                                                            <p className="quick-action-description">
+                                                                                Discover entry-level opportunities and training roles
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Job Cards */}
+                                                    {message.matchingJobs && message.matchingJobs.length > 0 && (
+                                                        <div className="job-cards-container">
+                                                            {sampleJobs
+                                                                .filter(job => message.matchingJobs.includes(job.id))
+                                                                .map(job => (
+                                                                    <div key={job.id} className="job-card">
+                                                                        <div className="job-card-header">
+                                                                            <div className="job-card-category">
+                                                                                {job.category}
+                                                                            </div>
+                                                                            <span className="job-card-posted">
+                                                                                <Clock className="job-card-posted-icon" />
+                                                                                {job.posted}
+                                                                            </span>
+                                                                        </div>
+                                                                        
+                                                                        <h4 className="job-card-title">{job.title}</h4>
+                                                                        <p className="job-card-description">{job.description}</p>
+                                                                        
+                                                                        <div className="job-card-meta">
+                                                                            <span className="job-card-meta-item">
+                                                                                <MapPin className="job-card-meta-icon" />
+                                                                                {job.location}
+                                                                            </span>
+                                                                            <span className="job-card-meta-item">
+                                                                                <Briefcase className="job-card-meta-icon" />
+                                                                                {job.type}
+                                                                            </span>
+                                                                        </div>
+                                                                        
+                                                                        <div className="job-card-skills">
+                                                                            {job.skills.slice(0, 2).map((skill, index) => (
+                                                                                <span key={index} className="job-card-skill">
+                                                                                    {skill}
+                                                                                </span>
