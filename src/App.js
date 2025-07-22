@@ -263,9 +263,10 @@ const FreshJobsChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(() => {
-    scrollToMessage();
-  }, [messages]);
+  // Removed auto-scroll on message changes
+  // useEffect(() => {
+  //   scrollToMessage();
+  // }, [messages]);
 
   useEffect(() => {
     setJobs(sampleJobs);
@@ -653,206 +654,239 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
   };
 
   return (
-    <div className="min-h-screen relative bg-transparent" style={{fontFamily: "'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
-      {/* Messages Container */}
-      <div className="max-w-5xl mx-auto px-6 py-8 pb-40">
-        
+    <div className="w-full h-screen relative bg-white" style={{
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    }}>
+      {/* Subtle background elements */}
+      <div className="absolute inset-0 overflow-hidden opacity-30">
+        <div className="absolute w-96 h-96 -top-48 -left-48 bg-gradient-to-br from-sky-200/20 to-cyan-300/20 rounded-full blur-3xl" />
+        <div className="absolute w-80 h-80 -bottom-40 -right-40 bg-gradient-to-tl from-blue-200/20 to-teal-300/20 rounded-full blur-3xl" />
+      </div>
+
+      {/* Main chat container */}
+      <div className="relative z-10 w-full h-full flex flex-col">
         {/* CV Status */}
         {userCV && (
-          <div className="mb-8 bg-green-50/80 border border-green-200 rounded-3xl p-6 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <FileText className="w-6 h-6 text-green-600" />
-              <div>
-                <p className="text-green-800 font-medium">{userCV.name}</p>
-                <p className="text-green-600 text-sm" style={{fontWeight: 300}}>
-                  CV uploaded and analyzed
-                </p>
+          <div className="mx-4 mt-4 mb-2">
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <FileText className="w-5 h-5 text-emerald-600" />
+                <div>
+                  <p className="text-slate-600 font-medium text-sm">{userCV.name}</p>
+                  <p className="text-emerald-600 text-xs font-normal">CV analyzed successfully</p>
+                </div>
               </div>
+              <button
+                onClick={() => setUserCV(null)}
+                className="text-slate-300 hover:text-slate-500 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
-            <button
-              onClick={() => setUserCV(null)}
-              className="text-green-600 hover:text-green-800 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
           </div>
         )}
 
-        <div className="space-y-12">
-          {messages.map((message) => (
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto px-4 py-2 space-y-8">
+          {messages.map((message, index) => (
             <div 
               key={message.id} 
               className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
               style={{
-                paddingTop: message.id === 1 ? '160px' : '0px'
+                paddingTop: message.id === 1 && index === 0 ? '40px' : '0px'
               }}
             >
-              <div className={`max-w-4xl ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
-                <div className={`flex items-start space-x-4 ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                  {/* Avatar */}
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ${
-                    message.type === 'ai' 
-                      ? '' 
-                      : 'bg-gray-300'
-                  }`} style={message.type === 'ai' ? {background: 'linear-gradient(to right, #005994, #BFD12F)'} : {}}>
-                    {message.type === 'ai' ? (
-                      <Sparkles className="w-6 h-6 text-white" />
-                    ) : (
-                      <User className="w-6 h-6 text-gray-600" />
-                    )}
-                  </div>
-                  
-                  {/* Message Content */}
-                  <div className={`flex-1 ${message.type === 'user' ? 'text-right' : 'text-left'}`}>
-                    <div className={`inline-block rounded-3xl shadow-lg ${
-                      message.type === 'user' 
-                        ? 'text-white p-6' 
-                        : 'bg-white/80 text-gray-800 border border-gray-200/50 p-10'
-                    }`} style={message.type === 'user' ? {background: 'rgb(0, 89, 148)'} : {}}>
-                      <div className="whitespace-pre-wrap leading-relaxed" style={{fontWeight: 300, fontSize: '1rem'}}>
-                        {message.content}
-                      </div>
-                      
-                      {/* Quick Action Prompts - only show after initial message */}
-                      {message.id === 1 && (
-                        <div className="mt-8 space-y-4">
-                          <p className="text-gray-600 text-sm mb-4" style={{fontWeight: 300}}>
-                            Choose an option to get started:
-                          </p>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <button
-                              onClick={() => fileInputRef.current?.click()}
-                              className="bg-white/90 hover:bg-white border border-gray-200 rounded-3xl p-6 text-left transition-all duration-200 hover:shadow-lg group"
-                            >
-                              <div className="flex items-start space-x-4">
-                                <Upload className="w-8 h-8 text-blue-600 group-hover:text-blue-700 flex-shrink-0" />
-                                <div>
-                                  <h4 className="text-gray-900 font-medium mb-2">Upload Your CV</h4>
-                                  <p className="text-gray-600 text-sm" style={{fontWeight: 300}}>
-                                    Get personalized job matches based on your experience
-                                  </p>
-                                </div>
-                              </div>
-                            </button>
-                            
-                            <button
-                              onClick={() => {
-                                setInputValue("I'm looking for mental health nursing roles");
-                                document.querySelector('textarea').focus();
-                              }}
-                              className="bg-white/90 hover:bg-white border border-gray-200 rounded-3xl p-6 text-left transition-all duration-200 hover:shadow-lg group"
-                            >
-                              <div className="flex items-start space-x-4">
-                                <Heart className="w-8 h-8 text-red-500 group-hover:text-red-600 flex-shrink-0" />
-                                <div>
-                                  <h4 className="text-gray-900 font-medium mb-2">Mental Health Roles</h4>
-                                  <p className="text-gray-600 text-sm" style={{fontWeight: 300}}>
-                                    Explore nursing and support positions in mental health
-                                  </p>
-                                </div>
-                              </div>
-                            </button>
-                            
-                            <button
-                              onClick={() => {
-                                setInputValue("Show me support worker positions for learning disabilities");
-                                document.querySelector('textarea').focus();
-                              }}
-                              className="bg-white/90 hover:bg-white border border-gray-200 rounded-3xl p-6 text-left transition-all duration-200 hover:shadow-lg group"
-                            >
-                              <div className="flex items-start space-x-4">
-                                <User className="w-8 h-8 text-green-600 group-hover:text-green-700 flex-shrink-0" />
-                                <div>
-                                  <h4 className="text-gray-900 font-medium mb-2">Support Worker Roles</h4>
-                                  <p className="text-gray-600 text-sm" style={{fontWeight: 300}}>
-                                    Find opportunities in learning disabilities support
-                                  </p>
-                                </div>
-                              </div>
-                            </button>
-                            
-                            <button
-                              onClick={() => {
-                                setInputValue("I'm new to healthcare - what entry level positions are available?");
-                                document.querySelector('textarea').focus();
-                              }}
-                              className="bg-white/90 hover:bg-white border border-gray-200 rounded-3xl p-6 text-left transition-all duration-200 hover:shadow-lg group"
-                            >
-                              <div className="flex items-start space-x-4">
-                                <Sparkles className="w-8 h-8 text-purple-600 group-hover:text-purple-700 flex-shrink-0" />
-                                <div>
-                                  <h4 className="text-gray-900 font-medium mb-2">New to Healthcare</h4>
-                                  <p className="text-gray-600 text-sm" style={{fontWeight: 300}}>
-                                    Discover entry-level opportunities and training roles
-                                  </p>
-                                </div>
-                              </div>
-                            </button>
+              <div className={`max-w-[85%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+                <div className={`flex items-start space-x-3 ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                  {message.type === 'user' ? (
+                    // User message layout - icon on left, blue text on transparent background
+                    <>
+                      <div className="flex-1 text-right">
+                        <div className="inline-block">
+                          <div style={{color: '#0068A3'}} className="leading-relaxed text-sm">
+                            {message.content}
                           </div>
                         </div>
-                      )}
-
-                      {/* Job Cards */}
-                      {message.matchingJobs && message.matchingJobs.length > 0 && (
-                        <div className="mt-8" style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem'}}>
-                          {sampleJobs
-                            .filter(job => message.matchingJobs.includes(job.id))
-                            .map(job => (
-                              <div key={job.id} className="bg-white/90 rounded-3xl p-6 border border-gray-200/50 backdrop-blur-sm hover:bg-white/95 transition-all duration-300 hover:shadow-lg">
-                                <div className="flex justify-between items-start mb-4">
-                                  <div className="inline-block px-4 py-2 bg-blue-100/80 text-blue-700 text-sm rounded-3xl" style={{fontWeight: 400}}>
-                                    {job.category}
+                      </div>
+                      <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">
+                        <User className="w-6 h-6" style={{color: '#0068A3'}} />
+                      </div>
+                    </>
+                  ) : (
+                    // AI message layout - rounded box with icon inside top left
+                    <>
+                      <div className="flex-1">
+                        <div className="bg-transparent border border-gray-200 rounded-3xl p-8 relative">
+                          {/* Icon inside the box, top left */}
+                          <div className="absolute top-6 left-6 w-10 h-10">
+                            <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-10 h-10">
+                              {/* Background wave (tinted down) */}
+                              <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
+                                    stroke="#3b82f6" 
+                                    strokeWidth="8" 
+                                    fill="none"
+                                    strokeLinecap="round"
+                                    opacity="0.2"/>
+                              
+                              {/* Animated wave */}
+                              <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
+                                    stroke="#3b82f6" 
+                                    strokeWidth="8" 
+                                    fill="none"
+                                    strokeLinecap="round">
+                                <animate attributeName="stroke-dasharray" 
+                                         values="0,2000;400,2000;0,2000" 
+                                         dur="3s" 
+                                         repeatCount="indefinite"/>
+                                <animate attributeName="stroke-dashoffset" 
+                                         values="0;-400;-800" 
+                                         dur="3s" 
+                                         repeatCount="indefinite"/>
+                              </path>
+                            </svg>
+                          </div>
+                          
+                          {/* Message content with left padding to account for icon */}
+                          <div className="pl-16 text-slate-600 leading-relaxed text-base font-normal">
+                            {message.content}
+                          </div>
+                          
+                          {/* Quick Action Prompts - only show after initial message */}
+                          {message.id === 1 && (
+                            <div className="pl-16 mt-6 space-y-3">
+                              <p className="text-slate-400 text-xs mb-3 font-normal">
+                                Choose an option to get started:
+                              </p>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <button
+                                  onClick={() => fileInputRef.current?.click()}
+                                  className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                >
+                                  <div className="flex items-start space-x-3">
+                                    <Upload className="w-6 h-6" style={{color: '#0068A3'}} />
+                                    <div>
+                                      <h4 className="text-slate-600 font-medium mb-1 text-sm">Upload Your CV</h4>
+                                      <p className="text-slate-400 text-xs font-normal">
+                                        Get personalized job matches
+                                      </p>
+                                    </div>
                                   </div>
-                                  <span className="text-sm text-gray-500 flex items-center" style={{fontWeight: 300}}>
-                                    <Clock className="w-4 h-4 mr-2" />
-                                    {job.posted}
-                                  </span>
-                                </div>
+                                </button>
                                 
-                                <h4 className="text-gray-900 mb-3 text-base leading-snug" style={{fontWeight: 500}}>{job.title}</h4>
-                                <p className="text-gray-600 text-sm mb-4 line-clamp-2" style={{fontWeight: 300}}>{job.description}</p>
+                                <button
+                                  onClick={() => {
+                                    setInputValue("I'm looking for mental health nursing roles");
+                                    document.querySelector('textarea').focus();
+                                  }}
+                                  className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                >
+                                  <div className="flex items-start space-x-3">
+                                    <Heart className="w-6 h-6" style={{color: '#0068A3'}} />
+                                    <div>
+                                      <h4 className="text-slate-600 font-medium mb-1 text-sm">Mental Health Roles</h4>
+                                      <p className="text-slate-400 text-xs font-normal">
+                                        Explore nursing positions
+                                      </p>
+                                    </div>
+                                  </div>
+                                </button>
                                 
-                                <div className="flex items-center gap-4 text-sm text-gray-500 mb-4" style={{fontWeight: 300}}>
-                                  <span className="flex items-center">
-                                    <MapPin className="w-4 h-4 mr-2" />
-                                    {job.location}
-                                  </span>
-                                  <span className="flex items-center">
-                                    <Briefcase className="w-4 h-4 mr-2" />
-                                    {job.type}
-                                  </span>
-                                </div>
+                                <button
+                                  onClick={() => {
+                                    setInputValue("Show me support worker positions for learning disabilities");
+                                    document.querySelector('textarea').focus();
+                                  }}
+                                  className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                >
+                                  <div className="flex items-start space-x-3">
+                                    <User className="w-6 h-6" style={{color: '#0068A3'}} />
+                                    <div>
+                                      <h4 className="text-slate-600 font-medium mb-1 text-sm">Support Worker Roles</h4>
+                                      <p className="text-slate-400 text-xs font-normal">
+                                        Learning disabilities support
+                                      </p>
+                                    </div>
+                                  </div>
+                                </button>
                                 
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                  {job.skills.slice(0, 2).map((skill, index) => (
-                                    <span key={index} className="bg-gray-100/80 text-gray-700 px-3 py-2 rounded-2xl" style={{fontWeight: 300, fontSize: '0.75rem'}}>
-                                      {skill}
-                                    </span>
-                                  ))}
-                                </div>
-                                
-                                <div className="flex justify-between items-center">
-                                  <div className="text-gray-900 text-base" style={{fontWeight: 500}}>{job.salary}</div>
-                                  <button
-                                    onClick={() => handleJobClick(job)}
-                                    className="text-white px-5 py-3 rounded-2xl transition-colors flex items-center space-x-2 text-sm shadow-md hover:shadow-lg"
-                                    style={{background: 'linear-gradient(to right, #005994, #BFD12F)', fontWeight: 400}}
-                                  >
-                                    <span>View Details</span>
-                                    <ArrowRight className="w-4 h-4" />
-                                  </button>
-                                </div>
+                                <button
+                                  onClick={() => {
+                                    setInputValue("I'm new to healthcare - what entry level positions are available?");
+                                    document.querySelector('textarea').focus();
+                                  }}
+                                  className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                >
+                                  <div className="flex items-start space-x-3">
+                                    <Sparkles className="w-6 h-6" style={{color: '#0068A3'}} />
+                                    <div>
+                                      <h4 className="text-slate-600 font-medium mb-1 text-sm">New to Healthcare</h4>
+                                      <p className="text-slate-400 text-xs font-normal">
+                                        Discover entry-level opportunities
+                                      </p>
+                                    </div>
+                                  </div>
+                                </button>
                               </div>
-                            ))}
+                            </div>
+                          )}
+
+                          {/* Job Cards */}
+                          {message.matchingJobs && message.matchingJobs.length > 0 && (
+                            <div className="pl-16 mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {sampleJobs
+                                .filter(job => message.matchingJobs.includes(job.id))
+                                .map(job => (
+                                  <div key={job.id} className="bg-white border border-gray-200 rounded-2xl p-4 hover:border-gray-300 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group">
+                                    <div className="flex justify-between items-start mb-3">
+                                      <div className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                                        {job.category}
+                                      </div>
+                                      <span className="text-xs text-slate-400 flex items-center">
+                                        <Clock className="w-3 h-3 mr-1" />
+                                        {job.posted}
+                                      </span>
+                                    </div>
+                                    
+                                    <h4 className="text-slate-600 mb-2 text-sm font-semibold leading-tight">{job.title}</h4>
+                                    <p className="text-slate-400 text-xs mb-3 line-clamp-2 font-normal">{job.description}</p>
+                                    
+                                    <div className="flex items-center gap-3 text-xs text-slate-300 mb-3 font-normal">
+                                      <span className="flex items-center">
+                                        <MapPin className="w-3 h-3 mr-1" />
+                                        {job.location}
+                                      </span>
+                                      <span className="flex items-center">
+                                        <Briefcase className="w-3 h-3 mr-1" />
+                                        {job.type}
+                                      </span>
+                                    </div>
+                                    
+                                    <div className="flex flex-wrap gap-1 mb-3">
+                                      {job.skills.slice(0, 2).map((skill, index) => (
+                                        <span key={index} className="bg-slate-100 text-slate-500 px-2 py-1 rounded-lg text-xs font-normal">
+                                          {skill}
+                                        </span>
+                                      ))}
+                                    </div>
+                                    
+                                    <div className="flex justify-between items-center">
+                                      <div className="text-slate-600 text-sm font-semibold">{job.salary}</div>
+                                      <button
+                                        onClick={() => handleJobClick(job)}
+                                        className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2 text-xs shadow-sm hover:shadow-md"
+                                      >
+                                        <span>View</span>
+                                        <ArrowRight className="w-3 h-3" />
+                                      </button>
+                                    </div>
+                                  </div>
+                                ))}
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    
-                    {/* Timestamp */}
-                    <div className={`text-sm text-gray-400 mt-4 ${message.type === 'user' ? 'text-right' : 'text-left'}`} style={{fontWeight: 300}}>
-                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </div>
-                  </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -861,16 +895,38 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
           {/* Loading indicator */}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg" style={{background: 'linear-gradient(to right, #005994, #BFD12F)'}}>
-                  <Sparkles className="w-6 h-6 text-white" />
+              <div className="bg-transparent border border-gray-200 rounded-3xl p-8 relative">
+                <div className="absolute top-6 left-6 w-10 h-10">
+                  <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-10 h-10">
+                    {/* Background wave (tinted down) */}
+                    <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
+                          stroke="#3b82f6" 
+                          strokeWidth="8" 
+                          fill="none"
+                          strokeLinecap="round"
+                          opacity="0.2"/>
+                    
+                    {/* Animated wave */}
+                    <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
+                          stroke="#3b82f6" 
+                          strokeWidth="8" 
+                          fill="none"
+                          strokeLinecap="round">
+                      <animate attributeName="stroke-dasharray" 
+                               values="0,2000;400,2000;0,2000" 
+                               dur="3s" 
+                               repeatCount="indefinite"/>
+                      <animate attributeName="stroke-dashoffset" 
+                               values="0;-400;-800" 
+                               dur="3s" 
+                               repeatCount="indefinite"/>
+                    </path>
+                  </svg>
                 </div>
-                <div className="bg-white/80 rounded-3xl p-10 shadow-lg border border-gray-200/50">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  </div>
+                <div className="pl-16 flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
               </div>
             </div>
@@ -878,20 +934,18 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
           
           <div ref={messagesEndRef} />
         </div>
-      </div>
 
-      {/* Fixed Input */}
-      <div className="fixed bottom-0 left-0 right-0 pt-8">
-        <div className="max-w-5xl mx-auto px-6 pb-8">
+        {/* Input Area */}
+        <div className="p-4">
           <div className="relative">
             <textarea
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Ask about healthcare roles, locations, or get career advice..."
-              className="w-full resize-none border-0 rounded-full px-10 py-8 pr-32 focus:outline-none focus:ring-2 focus:ring-blue-500/20 bg-white text-gray-700 placeholder-gray-400 shadow-xl text-lg"
+              className="w-full resize-none rounded-full px-6 py-5 pr-24 focus:outline-none focus:ring-2 focus:ring-sky-300 bg-white text-slate-700 placeholder-slate-400 border border-sky-200 text-sm"
               rows="1"
-              style={{ minHeight: '72px', maxHeight: '140px', fontWeight: 300, fontFamily: 'Figtree' }}
+              style={{ minHeight: '68px', maxHeight: '140px' }}
               disabled={isLoading}
               onInput={(e) => {
                 e.target.style.height = 'auto';
@@ -912,18 +966,18 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={isLoading}
-              className="absolute right-20 top-5 text-gray-500 hover:text-gray-700 w-12 h-12 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center hover:bg-gray-50"
+              className="absolute right-16 top-5 text-slate-300 hover:text-slate-500 w-8 h-8 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center hover:bg-sky-100"
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
             >
-              <Upload className="w-5 h-5" />
+              <Upload className="w-4 h-4" />
             </button>
             
             {/* Tooltip */}
             {showTooltip && (
-              <div className="absolute right-14 top-0 transform -translate-y-full bg-white text-gray-800 px-4 py-3 rounded-2xl shadow-lg border border-gray-200 whitespace-nowrap text-sm font-medium z-50 mb-2">
-                Share your CV and I'll find the best role matches for you
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white"></div>
+              <div className="absolute right-12 bottom-18 bg-slate-600 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap text-xs z-50">
+                Upload your CV for personalized matches
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-slate-600"></div>
               </div>
             )}
             
@@ -931,10 +985,9 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
             <button
               onClick={handleSendMessage}
               disabled={isLoading || !inputValue.trim()}
-              className="absolute right-4 top-5 text-white w-14 h-14 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl"
-              style={{backgroundColor: 'rgb(0, 89, 148)'}}
+              className="absolute right-3 top-3 bg-slate-600 hover:bg-slate-700 text-white w-12 h-12 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-sm"
             >
-              <Send className="w-6 h-6" />
+              <Send className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -943,76 +996,67 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
       {/* Job Modal */}
       {showJobModal && selectedJob && (
         <div 
-          className="fixed inset-0 bg-black/15 backdrop-blur-md flex items-center justify-center p-8" 
-          style={{
-            zIndex: '999999999 !important',
-            position: 'fixed !important',
-            top: '0 !important',
-            left: '0 !important',
-            right: '0 !important',
-            bottom: '0 !important'
-          }}
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50"
         >
-          <div className="bg-white/95 backdrop-blur-md rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200/50">
-            <div className="p-10">
-              <div className="flex justify-between items-start mb-10">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-xl border border-sky-100">
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-6">
                 <div>
-                  <div className="inline-block px-5 py-3 bg-blue-100/80 text-blue-700 text-base rounded-3xl mb-6" style={{fontWeight: 400}}>
+                  <div className="inline-block px-4 py-2 bg-sky-100 text-sky-700 text-sm rounded-full mb-3">
                     {selectedJob.category}
                   </div>
-                  <h2 className="text-4xl text-gray-900 mb-4 leading-tight" style={{fontWeight: 500}}>{selectedJob.title}</h2>
-                  <p className="text-gray-600 text-xl" style={{fontWeight: 300}}>{selectedJob.company}</p>
+                  <h2 className="text-2xl text-slate-600 mb-2 font-semibold">{selectedJob.title}</h2>
+                  <p className="text-slate-400">{selectedJob.company}</p>
                 </div>
                 <button
                   onClick={closeJobModal}
-                  className="text-gray-400 hover:text-gray-600 text-3xl w-12 h-12 rounded-3xl hover:bg-gray-100/50 transition-colors" style={{fontWeight: 300}}
+                  className="text-slate-300 hover:text-slate-500 text-xl w-8 h-8 rounded-full hover:bg-slate-100 transition-colors flex items-center justify-center"
                 >
-                  ×
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <div className="space-y-8 mb-10">
-                <div className="flex items-center gap-10 text-gray-600 flex-wrap" style={{fontWeight: 300}}>
-                  <span className="flex items-center text-lg">
-                    <MapPin className="w-6 h-6 mr-4 text-gray-400" />
+              <div className="space-y-6 mb-6">
+                <div className="flex items-center gap-6 text-slate-400 flex-wrap text-sm">
+                  <span className="flex items-center">
+                    <MapPin className="w-4 h-4 mr-2" />
                     {selectedJob.location}
                   </span>
-                  <span className="flex items-center text-lg">
-                    <Briefcase className="w-6 h-6 mr-4 text-gray-400" />
+                  <span className="flex items-center">
+                    <Briefcase className="w-4 h-4 mr-2" />
                     {selectedJob.type}
                   </span>
-                  <span className="flex items-center text-lg">
-                    <Clock className="w-6 h-6 mr-4 text-gray-400" />
+                  <span className="flex items-center">
+                    <Clock className="w-4 h-4 mr-2" />
                     {selectedJob.posted}
                   </span>
                 </div>
 
-                <div className="text-3xl text-gray-900" style={{fontWeight: 400}}>{selectedJob.salary}</div>
+                <div className="text-xl text-slate-600 font-semibold">{selectedJob.salary}</div>
 
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap gap-2">
                   {selectedJob.skills.map((skill, index) => (
-                    <span key={index} className="bg-gray-100/80 text-gray-700 px-5 py-3 rounded-3xl text-base" style={{fontWeight: 300}}>
+                    <span key={index} className="bg-slate-100 text-slate-500 px-3 py-2 rounded-lg text-sm">
                       {skill}
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="mb-10">
-                <h3 className="text-2xl text-gray-900 mb-6" style={{fontWeight: 400}}>Job Description</h3>
-                <div className="text-gray-700 leading-relaxed whitespace-pre-line text-lg" style={{fontWeight: 300}}>
+              <div className="mb-6">
+                <h3 className="text-lg text-slate-600 mb-3 font-semibold">Job Description</h3>
+                <div className="text-slate-500 leading-relaxed whitespace-pre-line text-sm">
                   {selectedJob.fullDescription || selectedJob.description}
                 </div>
               </div>
 
-              <div className="border-t border-gray-200/50 pt-10">
+              <div className="border-t border-slate-100 pt-6">
                 <button
                   onClick={() => handleApply(selectedJob)}
-                  className="w-full text-white py-5 px-10 rounded-3xl transition-colors flex items-center justify-center space-x-4 text-xl shadow-xl hover:shadow-2xl"
-                  style={{background: 'linear-gradient(to right, #005994, #BFD12F)', fontWeight: 400}}
+                  className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 shadow-sm hover:shadow-md"
                 >
                   <span>Apply Now</span>
-                  <ArrowRight className="w-6 h-6" />
+                  <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
             </div>
