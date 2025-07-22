@@ -654,7 +654,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
   };
 
   return (
-    <div className="w-full min-h-screen relative" style={{
+    <div className="w-full relative" style={{
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     }}>
       {/* Subtle background elements */}
@@ -664,7 +664,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
       </div>
 
       {/* Main chat container */}
-      <div className="relative z-10 w-full flex flex-col min-h-screen">
+      <div className="relative z-10 w-full flex flex-col">
         {/* CV Status */}
         {userCV && (
           <div className="mx-4 mt-4 mb-2">
@@ -687,7 +687,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
         )}
 
         {/* Messages */}
-<div className="flex-grow overflow-y-auto px-4 py-2 space-y-8 min-h-0">
+<div className="px-4 py-2 space-y-8">
           {messages.map((message, index) => (
             <div 
               key={message.id} 
