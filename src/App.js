@@ -687,7 +687,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
         )}
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-4 py-2 space-y-8">
+<div className="flex-grow overflow-y-auto px-4 py-2 space-y-8 max-h-[calc(100vh-200px)]">
           {messages.map((message, index) => (
             <div 
               key={message.id} 
