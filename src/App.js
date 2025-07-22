@@ -654,7 +654,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
   };
 
   return (
-    <div className="w-full h-screen relative bg-white" style={{
+    <div className="w-full h-screen relative" style={{
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     }}>
       {/* Subtle background elements */}
