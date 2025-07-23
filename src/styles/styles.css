@@ -48,19 +48,11 @@
   padding-bottom: 40px;
 }
 
-/* Messages container - newest messages at top of screen */
-.messages-container {
-  padding: 48px;
-  padding-bottom: 40px;
-  padding-top: 0; /* Remove top padding so messages start at very top */
-}
-
-/* Message bubbles - stack from top, newest pushes others up */
+/* Message bubbles should stack vertically from top, newest at bottom */
 .messages-list {
   display: flex;
-  flex-direction: column-reverse; /* This makes newest messages appear at top */
+  flex-direction: column;
   gap: 48px;
-  padding-top: 48px; /* Add padding here instead */
 }
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
@@ -268,8 +260,6 @@
 
 .input-wrapper {
   pointer-events: all; /* Re-enable clicks for the actual input area */
-  max-width: 1440px;
-  margin: 0 auto;
 }
 
 .input-wrapper {
