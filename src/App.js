@@ -647,17 +647,17 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
 
   return (
     <div 
-      className="w-full h-full flex flex-col relative overflow-hidden bg-transparent" 
+      className="w-full relative bg-transparent" 
       style={{
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
         minHeight: '400px' // Minimum height to ensure usability
       }}
     >
-      {/* Main chat container - takes full height minus input area */}
-      <div className="relative z-10 flex-1 flex flex-col min-h-0">
+      {/* Main chat container - scrollable content */}
+      <div className="relative z-10 pb-24">
         {/* CV Status */}
         {userCV && (
-          <div className="mx-4 mt-4 mb-2 flex-shrink-0">
+          <div className="mx-4 mt-4 mb-2">
             <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <FileText className="w-5 h-5 text-emerald-600" />
@@ -676,8 +676,8 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
           </div>
         )}
 
-        {/* Messages - scrollable area */}
-        <div className="flex-1 overflow-y-auto px-4 py-2 space-y-8">
+        {/* Messages */}
+        <div className="px-4 py-2 space-y-8">
           {messages.map((message, index) => (
             <div 
               key={message.id} 
@@ -926,8 +926,8 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
         </div>
       </div>
 
-      {/* Input Area - Fixed at bottom */}
-      <div className="p-4 flex-shrink-0 bg-transparent">
+      {/* Input Area - Fixed/Floating at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">
         <div className="relative max-w-4xl mx-auto">
           <textarea
             value={inputValue}
