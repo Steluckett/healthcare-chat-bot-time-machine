@@ -40,6 +40,11 @@ const FreshJobsChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Auto-scroll when messages change
+  useEffect(() => {
+    scrollToMessage();
+  }, [messages]);
+
   useEffect(() => {
     setJobs(sampleJobs);
   }, []);
@@ -623,7 +628,8 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
             </div>
           )}
           
-          <div ref={messagesEndRef} />
+          {/* This div marks the end of messages for auto-scroll */}
+          <div ref={messagesEndRef} style={{ height: '1px' }} />
         </div>
       </div>
 
