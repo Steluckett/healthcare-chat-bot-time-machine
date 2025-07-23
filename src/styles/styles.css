@@ -52,17 +52,15 @@
 .messages-container {
   padding: 48px;
   padding-bottom: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; /* Push messages to TOP of screen */
-  min-height: calc(100vh - 200px); /* Take up viewport height */
+  padding-top: 0; /* Remove top padding so messages start at very top */
 }
 
-/* Message bubbles - stack normally, newest will be at top */
+/* Message bubbles - stack from top, newest pushes others up */
 .messages-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse; /* This makes newest messages appear at top */
   gap: 48px;
+  padding-top: 48px; /* Add padding here instead */
 }
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
