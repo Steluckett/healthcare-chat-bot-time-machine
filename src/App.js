@@ -357,7 +357,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
       }}
     >
       {/* Main chat container - scrollable content */}
-      <div className="messages-container custom-scrollbar">
+      <div className="messages-container">
         {/* CV Status */}
         {userCV && (
           <div className="mt-4 mb-2">
