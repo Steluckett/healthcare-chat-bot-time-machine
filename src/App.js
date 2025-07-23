@@ -388,9 +388,9 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
           </div>
         )}
 
-        {/* Messages */}
+        {/* Messages - render in reverse order so newest is at top */}
         <div className="messages-list">
-          {messages.map((message, index) => (
+          {[...messages].reverse().map((message, index) => (
             <div 
               key={message.id} 
               className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}
