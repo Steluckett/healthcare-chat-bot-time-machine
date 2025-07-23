@@ -647,17 +647,12 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
 
   return (
     <div 
-      className="w-screen h-screen flex flex-col relative overflow-hidden bg-transparent" 
+      className="w-full h-full flex flex-col relative overflow-hidden bg-transparent" 
       style={{
-        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        minHeight: '400px' // Minimum height to ensure usability
       }}
     >
-      {/* Subtle background elements */}
-      <div className="absolute inset-0 overflow-hidden opacity-30">
-        <div className="absolute w-96 h-96 -top-48 -left-48 bg-gradient-to-br from-sky-200/20 to-cyan-300/20 rounded-full blur-3xl" />
-        <div className="absolute w-80 h-80 -bottom-40 -right-40 bg-gradient-to-tl from-blue-200/20 to-teal-300/20 rounded-full blur-3xl" />
-      </div>
-
       {/* Main chat container - takes full height minus input area */}
       <div className="relative z-10 flex-1 flex flex-col min-h-0">
         {/* CV Status */}
