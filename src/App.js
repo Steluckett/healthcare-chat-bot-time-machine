@@ -938,7 +938,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
 
       {/* Input Area - Fixed at bottom */}
       <div className="flex-shrink-0 p-12 pb-16 bg-transparent">
-        <div className="relative max-w-4xl mx-auto">
+        <div className="relative max-w-full mx-auto">
           <textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
