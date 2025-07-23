@@ -259,21 +259,13 @@ const FreshJobsChat = () => {
     });
   };
 
-  // Auto-scroll to bottom when messages change
-  const scrollToBottom = () => {
-    setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
+  const scrollToMessage = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
     setJobs(sampleJobs);
   }, []);
-
-  // Scroll to bottom when messages change
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   const handleJobClick = (job) => {
     setSelectedJob(job);
@@ -655,290 +647,289 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
 
   return (
     <div 
-      className="w-full h-screen flex flex-col bg-transparent overflow-hidden" 
+      className="w-full relative bg-transparent" 
       style={{
-        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        minHeight: '400px' // Minimum height to ensure usability
       }}
     >
-      {/* Chat messages container - scrollable with full width */}
-      <div className="flex-1 overflow-y-auto px-4">
-        <div className="w-full">
-          {/* CV Status */}
-          {userCV && (
-            <div className="mt-4 mb-2">
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <FileText className="w-5 h-5 text-emerald-600" />
-                  <div>
-                    <p className="text-slate-600 font-medium text-sm">{userCV.name}</p>
-                    <p className="text-emerald-600 text-xs font-normal">CV analyzed successfully</p>
-                  </div>
+      {/* Main chat container - scrollable content */}
+      <div className="relative z-10 pb-40 px-12">
+        {/* CV Status */}
+        {userCV && (
+          <div className="mt-4 mb-2">
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <FileText className="w-5 h-5 text-emerald-600" />
+                <div>
+                  <p className="text-slate-600 font-medium text-sm">{userCV.name}</p>
+                  <p className="text-emerald-600 text-xs font-normal">CV analyzed successfully</p>
                 </div>
-                <button
-                  onClick={() => setUserCV(null)}
-                  className="text-slate-300 hover:text-slate-500 transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+              </div>
+              <button
+                onClick={() => setUserCV(null)}
+                className="text-slate-300 hover:text-slate-500 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Messages */}
+        <div className="py-2 space-y-12">
+          {messages.map((message, index) => (
+            <div 
+              key={message.id} 
+              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}
+              style={{
+                paddingTop: message.id === 1 && index === 0 ? '40px' : '0px',
+                animation: 'fadeInUp 0.5s ease-out forwards'
+              }}
+            >
+              <div className={`max-w-[85%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+                <div className={`flex items-start space-x-3 ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                  {message.type === 'user' ? (
+                    // User message layout - icon on left, blue text on transparent background
+                    <>
+                      <div className="flex-1 text-right">
+                        <div className="inline-block">
+                          <div style={{color: '#0068A3'}} className="leading-relaxed text-lg px-4 py-2">
+                            {message.content}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
+                        <User className="w-8 h-8" style={{color: '#0068A3'}} />
+                      </div>
+                    </>
+                  ) : (
+                    // AI message layout - rounded box with icon inside top left
+                    <>
+                      <div className="flex-1">
+                        <div className="bg-transparent border border-gray-200 rounded-3xl p-10 relative">
+                          {/* Icon inside the box, top left */}
+                          <div className="absolute top-8 left-8 w-12 h-12">
+                            <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
+                              {/* Background wave (tinted down) */}
+                              <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
+                                    stroke="#3b82f6" 
+                                    strokeWidth="8" 
+                                    fill="none"
+                                    strokeLinecap="round"
+                                    opacity="0.2"/>
+                              
+                              {/* Animated wave */}
+                              <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
+                                    stroke="#3b82f6" 
+                                    strokeWidth="8" 
+                                    fill="none"
+                                    strokeLinecap="round">
+                                <animate attributeName="stroke-dasharray" 
+                                         values="0,2000;400,2000;0,2000" 
+                                         dur="3s" 
+                                         repeatCount="indefinite"/>
+                                <animate attributeName="stroke-dashoffset" 
+                                         values="0;-400;-800" 
+                                         dur="3s" 
+                                         repeatCount="indefinite"/>
+                              </path>
+                            </svg>
+                          </div>
+                          
+                          {/* Message content with left padding to account for icon */}
+                          <div className="pl-20 text-slate-600 leading-relaxed text-lg font-normal">
+                            {message.content}
+                          </div>
+                          
+                          {/* Quick Action Prompts - only show after initial message */}
+                          {message.id === 1 && (
+                            <div className="pl-20 mt-8 space-y-4">
+                              <p className="text-slate-400 text-xs mb-3 font-normal">
+                                Choose an option to get started:
+                              </p>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <button
+                                  onClick={() => fileInputRef.current?.click()}
+                                  className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                >
+                                  <div className="flex items-start space-x-3">
+                                    <Upload className="w-6 h-6" style={{color: '#0068A3'}} />
+                                    <div>
+                                      <h4 className="text-slate-600 font-medium mb-1 text-sm">Upload Your CV</h4>
+                                      <p className="text-slate-400 text-xs font-normal">
+                                        Get personalized job matches
+                                      </p>
+                                    </div>
+                                  </div>
+                                </button>
+                                
+                                <button
+                                  onClick={() => {
+                                    setInputValue("I'm looking for mental health nursing roles");
+                                    document.querySelector('textarea').focus();
+                                  }}
+                                  className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                >
+                                  <div className="flex items-start space-x-3">
+                                    <Heart className="w-6 h-6" style={{color: '#0068A3'}} />
+                                    <div>
+                                      <h4 className="text-slate-600 font-medium mb-1 text-sm">Mental Health Roles</h4>
+                                      <p className="text-slate-400 text-xs font-normal">
+                                        Explore nursing positions
+                                      </p>
+                                    </div>
+                                  </div>
+                                </button>
+                                
+                                <button
+                                  onClick={() => {
+                                    setInputValue("Show me support worker positions for learning disabilities");
+                                    document.querySelector('textarea').focus();
+                                  }}
+                                  className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                >
+                                  <div className="flex items-start space-x-3">
+                                    <User className="w-6 h-6" style={{color: '#0068A3'}} />
+                                    <div>
+                                      <h4 className="text-slate-600 font-medium mb-1 text-sm">Support Worker Roles</h4>
+                                      <p className="text-slate-400 text-xs font-normal">
+                                        Learning disabilities support
+                                      </p>
+                                    </div>
+                                  </div>
+                                </button>
+                                
+                                <button
+                                  onClick={() => {
+                                    setInputValue("I'm new to healthcare - what entry level positions are available?");
+                                    document.querySelector('textarea').focus();
+                                  }}
+                                  className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                >
+                                  <div className="flex items-start space-x-3">
+                                    <Sparkles className="w-6 h-6" style={{color: '#0068A3'}} />
+                                    <div>
+                                      <h4 className="text-slate-600 font-medium mb-1 text-sm">New to Healthcare</h4>
+                                      <p className="text-slate-400 text-xs font-normal">
+                                        Discover entry-level opportunities
+                                      </p>
+                                    </div>
+                                  </div>
+                                </button>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Job Cards */}
+                          {message.matchingJobs && message.matchingJobs.length > 0 && (
+                            <div className="pl-20 mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {sampleJobs
+                                .filter(job => message.matchingJobs.includes(job.id))
+                                .map(job => (
+                                  <div key={job.id} className="bg-white border border-gray-200 rounded-2xl p-4 hover:border-gray-300 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group">
+                                    <div className="flex justify-between items-start mb-3">
+                                      <div className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                                        {job.category}
+                                      </div>
+                                      <span className="text-xs text-slate-400 flex items-center">
+                                        <Clock className="w-3 h-3 mr-1" />
+                                        {job.posted}
+                                      </span>
+                                    </div>
+                                    
+                                    <h4 className="text-slate-600 mb-2 text-sm font-semibold leading-tight">{job.title}</h4>
+                                    <p className="text-slate-400 text-xs mb-3 line-clamp-2 font-normal">{job.description}</p>
+                                    
+                                    <div className="flex items-center gap-3 text-xs text-slate-300 mb-3 font-normal">
+                                      <span className="flex items-center">
+                                        <MapPin className="w-3 h-3 mr-1" />
+                                        {job.location}
+                                      </span>
+                                      <span className="flex items-center">
+                                        <Briefcase className="w-3 h-3 mr-1" />
+                                        {job.type}
+                                      </span>
+                                    </div>
+                                    
+                                    <div className="flex flex-wrap gap-1 mb-3">
+                                      {job.skills.slice(0, 2).map((skill, index) => (
+                                        <span key={index} className="bg-slate-100 text-slate-500 px-2 py-1 rounded-lg text-xs font-normal">
+                                          {skill}
+                                        </span>
+                                      ))}
+                                    </div>
+                                    
+                                    <div className="flex justify-between items-center">
+                                      <div className="text-slate-600 text-sm font-semibold">{job.salary}</div>
+                                      <button
+                                        onClick={() => handleJobClick(job)}
+                                        className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2 text-xs shadow-sm hover:shadow-md"
+                                      >
+                                        <span>View</span>
+                                        <ArrowRight className="w-3 h-3" />
+                                      </button>
+                                    </div>
+                                  </div>
+                                ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+          
+          {/* Loading indicator */}
+          {isLoading && (
+            <div className="flex justify-start animate-fade-in-up" style={{ animation: 'fadeInUp 0.5s ease-out forwards' }}>
+              <div className="bg-transparent border border-gray-200 rounded-3xl p-10 relative">
+                <div className="absolute top-8 left-8 w-12 h-12">
+                  <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
+                    {/* Background wave (tinted down) */}
+                    <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
+                          stroke="#3b82f6" 
+                          strokeWidth="8" 
+                          fill="none"
+                          strokeLinecap="round"
+                          opacity="0.2"/>
+                    
+                    {/* Animated wave */}
+                    <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
+                          stroke="#3b82f6" 
+                          strokeWidth="8" 
+                          fill="none"
+                          strokeLinecap="round">
+                      <animate attributeName="stroke-dasharray" 
+                               values="0,2000;400,2000;0,2000" 
+                               dur="3s" 
+                               repeatCount="indefinite"/>
+                      <animate attributeName="stroke-dashoffset" 
+                               values="0;-400;-800" 
+                               dur="3s" 
+                               repeatCount="indefinite"/>
+                    </path>
+                  </svg>
+                </div>
+                <div className="pl-20 flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
               </div>
             </div>
           )}
-
-          {/* Messages */}
-          <div className="py-8 space-y-8">
-            {messages.map((message, index) => (
-              <div 
-                key={message.id} 
-                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}
-                style={{
-                  paddingTop: message.id === 1 && index === 0 ? '40px' : '0px',
-                  animation: 'fadeInUp 0.5s ease-out forwards'
-                }}
-              >
-                <div className={`w-full ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
-                  <div className={`flex items-start space-x-3 ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                    {message.type === 'user' ? (
-                      // User message layout - icon on left, blue text on transparent background
-                      <>
-                        <div className="flex-1 text-right">
-                          <div className="inline-block">
-                            <div style={{color: '#0068A3'}} className="leading-relaxed text-sm">
-                              {message.content}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">
-                          <User className="w-6 h-6" style={{color: '#0068A3'}} />
-                        </div>
-                      </>
-                    ) : (
-                      // AI message layout - rounded box with icon inside top left
-                      <>
-                        <div className="flex-1 w-full">
-                          <div className="bg-transparent border border-gray-200 rounded-3xl p-8 relative w-full">
-                            {/* Icon inside the box, top left */}
-                            <div className="absolute top-6 left-6 w-10 h-10">
-                              <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-10 h-10">
-                                {/* Background wave (tinted down) */}
-                                <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
-                                      stroke="#3b82f6" 
-                                      strokeWidth="8" 
-                                      fill="none"
-                                      strokeLinecap="round"
-                                      opacity="0.2"/>
-                                
-                                {/* Animated wave */}
-                                <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
-                                      stroke="#3b82f6" 
-                                      strokeWidth="8" 
-                                      fill="none"
-                                      strokeLinecap="round">
-                                  <animate attributeName="stroke-dasharray" 
-                                           values="0,2000;400,2000;0,2000" 
-                                           dur="3s" 
-                                           repeatCount="indefinite"/>
-                                  <animate attributeName="stroke-dashoffset" 
-                                           values="0;-400;-800" 
-                                           dur="3s" 
-                                           repeatCount="indefinite"/>
-                                </path>
-                              </svg>
-                            </div>
-                            
-                            {/* Message content with left padding to account for icon */}
-                            <div className="pl-16 text-slate-600 leading-relaxed text-base font-normal">
-                              {message.content}
-                            </div>
-                            
-                            {/* Quick Action Prompts - only show after initial message */}
-                            {message.id === 1 && (
-                              <div className="pl-16 mt-6 space-y-3">
-                                <p className="text-slate-400 text-xs mb-3 font-normal">
-                                  Choose an option to get started:
-                                </p>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                                  <button
-                                    onClick={() => fileInputRef.current?.click()}
-                                    className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
-                                  >
-                                    <div className="flex items-start space-x-3">
-                                      <Upload className="w-6 h-6" style={{color: '#0068A3'}} />
-                                      <div>
-                                        <h4 className="text-slate-600 font-medium mb-1 text-sm">Upload Your CV</h4>
-                                        <p className="text-slate-400 text-xs font-normal">
-                                          Get personalized job matches
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </button>
-                                  
-                                  <button
-                                    onClick={() => {
-                                      setInputValue("I'm looking for mental health nursing roles");
-                                      document.querySelector('textarea').focus();
-                                    }}
-                                    className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
-                                  >
-                                    <div className="flex items-start space-x-3">
-                                      <Heart className="w-6 h-6" style={{color: '#0068A3'}} />
-                                      <div>
-                                        <h4 className="text-slate-600 font-medium mb-1 text-sm">Mental Health Roles</h4>
-                                        <p className="text-slate-400 text-xs font-normal">
-                                          Explore nursing positions
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </button>
-                                  
-                                  <button
-                                    onClick={() => {
-                                      setInputValue("Show me support worker positions for learning disabilities");
-                                      document.querySelector('textarea').focus();
-                                    }}
-                                    className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
-                                  >
-                                    <div className="flex items-start space-x-3">
-                                      <User className="w-6 h-6" style={{color: '#0068A3'}} />
-                                      <div>
-                                        <h4 className="text-slate-600 font-medium mb-1 text-sm">Support Worker Roles</h4>
-                                        <p className="text-slate-400 text-xs font-normal">
-                                          Learning disabilities support
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </button>
-                                  
-                                  <button
-                                    onClick={() => {
-                                      setInputValue("I'm new to healthcare - what entry level positions are available?");
-                                      document.querySelector('textarea').focus();
-                                    }}
-                                    className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
-                                  >
-                                    <div className="flex items-start space-x-3">
-                                      <Sparkles className="w-6 h-6" style={{color: '#0068A3'}} />
-                                      <div>
-                                        <h4 className="text-slate-600 font-medium mb-1 text-sm">New to Healthcare</h4>
-                                        <p className="text-slate-400 text-xs font-normal">
-                                          Discover entry-level opportunities
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </button>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Job Cards */}
-                            {message.matchingJobs && message.matchingJobs.length > 0 && (
-                              <div className="pl-16 mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                                {sampleJobs
-                                  .filter(job => message.matchingJobs.includes(job.id))
-                                  .map(job => (
-                                    <div key={job.id} className="bg-white border border-gray-200 rounded-2xl p-4 hover:border-gray-300 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group">
-                                      <div className="flex justify-between items-start mb-3">
-                                        <div className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
-                                          {job.category}
-                                        </div>
-                                        <span className="text-xs text-slate-400 flex items-center">
-                                          <Clock className="w-3 h-3 mr-1" />
-                                          {job.posted}
-                                        </span>
-                                      </div>
-                                      
-                                      <h4 className="text-slate-600 mb-2 text-sm font-semibold leading-tight">{job.title}</h4>
-                                      <p className="text-slate-400 text-xs mb-3 line-clamp-2 font-normal">{job.description}</p>
-                                      
-                                      <div className="flex items-center gap-3 text-xs text-slate-300 mb-3 font-normal">
-                                        <span className="flex items-center">
-                                          <MapPin className="w-3 h-3 mr-1" />
-                                          {job.location}
-                                        </span>
-                                        <span className="flex items-center">
-                                          <Briefcase className="w-3 h-3 mr-1" />
-                                          {job.type}
-                                        </span>
-                                      </div>
-                                      
-                                      <div className="flex flex-wrap gap-1 mb-3">
-                                        {job.skills.slice(0, 2).map((skill, index) => (
-                                          <span key={index} className="bg-slate-100 text-slate-500 px-2 py-1 rounded-lg text-xs font-normal">
-                                            {skill}
-                                          </span>
-                                        ))}
-                                      </div>
-                                      
-                                      <div className="flex justify-between items-center">
-                                        <div className="text-slate-600 text-sm font-semibold">{job.salary}</div>
-                                        <button
-                                          onClick={() => handleJobClick(job)}
-                                          className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2 text-xs shadow-sm hover:shadow-md"
-                                        >
-                                          <span>View</span>
-                                          <ArrowRight className="w-3 h-3" />
-                                        </button>
-                                      </div>
-                                    </div>
-                                  ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-            
-            {/* Loading indicator */}
-            {isLoading && (
-              <div className="flex justify-start animate-fade-in-up" style={{ animation: 'fadeInUp 0.5s ease-out forwards' }}>
-                <div className="bg-transparent border border-gray-200 rounded-3xl p-8 relative">
-                  <div className="absolute top-6 left-6 w-10 h-10">
-                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-10 h-10">
-                      {/* Background wave (tinted down) */}
-                      <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
-                            stroke="#3b82f6" 
-                            strokeWidth="8" 
-                            fill="none"
-                            strokeLinecap="round"
-                            opacity="0.2"/>
-                      
-                      {/* Animated wave */}
-                      <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
-                            stroke="#3b82f6" 
-                            strokeWidth="8" 
-                            fill="none"
-                            strokeLinecap="round">
-                        <animate attributeName="stroke-dasharray" 
-                                 values="0,2000;400,2000;0,2000" 
-                                 dur="3s" 
-                                 repeatCount="indefinite"/>
-                        <animate attributeName="stroke-dashoffset" 
-                                 values="0;-400;-800" 
-                                 dur="3s" 
-                                 repeatCount="indefinite"/>
-                      </path>
-                    </svg>
-                  </div>
-                  <div className="pl-16 flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            <div ref={messagesEndRef} />
-          </div>
+          
+          <div ref={messagesEndRef} />
         </div>
       </div>
 
-      {/* Input Area - Fixed at bottom with full width */}
-      <div className="flex-shrink-0 p-4 pb-8 bg-transparent">
-        <div className="relative w-full">
+      {/* Input Area - Fixed/Floating at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 p-12 pb-16 bg-transparent z-50">
+        <div className="relative max-w-4xl mx-auto">
           <textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -947,14 +938,15 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
             className="w-full resize-none rounded-full px-6 py-6 pr-32 focus:outline-none bg-white text-slate-700 placeholder-slate-400 text-sm shadow-sm border-2 border-white"
             style={{
               minHeight: '72px',
-              maxHeight: '140px',
+              maxHeight: Math.min(window.innerHeight * 0.2, 140) + 'px',
               boxShadow: '0 0 0 2px white, 0 0 20px rgba(117, 205, 214, 0.3)',
               animation: 'pulse-glow 2s ease-in-out infinite alternate'
             }}
             disabled={isLoading}
             onInput={(e) => {
               e.target.style.height = 'auto';
-              e.target.style.height = Math.min(e.target.scrollHeight, 140) + 'px';
+              const maxHeight = Math.min(window.innerHeight * 0.2, 140);
+              e.target.style.height = Math.min(e.target.scrollHeight, maxHeight) + 'px';
             }}
           />
           
