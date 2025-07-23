@@ -655,23 +655,22 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
 
   return (
     <div 
-      className="w-full flex flex-col bg-transparent overflow-hidden" 
+      className="w-full h-screen flex flex-col bg-transparent overflow-hidden" 
       style={{
-        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        height: '60vh' // More compact height to work with available space
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
       }}
     >
       {/* Chat messages container - scrollable */}
-      <div className="flex-1 overflow-y-auto px-6">
+      <div className="flex-1 overflow-y-auto px-12">
         <div className="max-w-4xl mx-auto">
           {/* CV Status */}
           {userCV && (
-            <div className="mt-2 mb-2">
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center justify-between">
+            <div className="mt-4 mb-2">
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <FileText className="w-4 h-4 text-emerald-600" />
+                  <FileText className="w-5 h-5 text-emerald-600" />
                   <div>
-                    <p className="text-slate-600 font-medium text-xs">{userCV.name}</p>
+                    <p className="text-slate-600 font-medium text-sm">{userCV.name}</p>
                     <p className="text-emerald-600 text-xs font-normal">CV analyzed successfully</p>
                   </div>
                 </div>
@@ -679,20 +678,20 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                   onClick={() => setUserCV(null)}
                   className="text-slate-300 hover:text-slate-500 transition-colors"
                 >
-                  <X className="w-3 h-3" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
             </div>
           )}
 
           {/* Messages */}
-          <div className="py-4 space-y-6">
+          <div className="py-8 space-y-8">
             {messages.map((message, index) => (
               <div 
                 key={message.id} 
                 className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}
                 style={{
-                  paddingTop: message.id === 1 && index === 0 ? '20px' : '0px',
+                  paddingTop: message.id === 1 && index === 0 ? '40px' : '0px',
                   animation: 'fadeInUp 0.5s ease-out forwards'
                 }}
               >
@@ -708,18 +707,18 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                             </div>
                           </div>
                         </div>
-                        <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                          <User className="w-5 h-5" style={{color: '#0068A3'}} />
+                        <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">
+                          <User className="w-6 h-6" style={{color: '#0068A3'}} />
                         </div>
                       </>
                     ) : (
                       // AI message layout - rounded box with icon inside top left
                       <>
                         <div className="flex-1">
-                          <div className="bg-transparent border border-gray-200 rounded-3xl p-6 relative">
+                          <div className="bg-transparent border border-gray-200 rounded-3xl p-8 relative">
                             {/* Icon inside the box, top left */}
-                            <div className="absolute top-4 left-4 w-8 h-8">
-                              <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
+                            <div className="absolute top-6 left-6 w-10 h-10">
+                              <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-10 h-10">
                                 {/* Background wave (tinted down) */}
                                 <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
                                       stroke="#3b82f6" 
@@ -747,25 +746,25 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                             </div>
                             
                             {/* Message content with left padding to account for icon */}
-                            <div className="pl-12 text-slate-600 leading-relaxed text-sm font-normal">
+                            <div className="pl-16 text-slate-600 leading-relaxed text-base font-normal">
                               {message.content}
                             </div>
                             
                             {/* Quick Action Prompts - only show after initial message */}
                             {message.id === 1 && (
-                              <div className="pl-12 mt-4 space-y-2">
-                                <p className="text-slate-400 text-xs mb-2 font-normal">
+                              <div className="pl-16 mt-6 space-y-3">
+                                <p className="text-slate-400 text-xs mb-3 font-normal">
                                   Choose an option to get started:
                                 </p>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                   <button
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-3 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                    className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
                                   >
-                                    <div className="flex items-start space-x-2">
-                                      <Upload className="w-5 h-5" style={{color: '#0068A3'}} />
+                                    <div className="flex items-start space-x-3">
+                                      <Upload className="w-6 h-6" style={{color: '#0068A3'}} />
                                       <div>
-                                        <h4 className="text-slate-600 font-medium mb-1 text-xs">Upload Your CV</h4>
+                                        <h4 className="text-slate-600 font-medium mb-1 text-sm">Upload Your CV</h4>
                                         <p className="text-slate-400 text-xs font-normal">
                                           Get personalized job matches
                                         </p>
@@ -778,12 +777,12 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                                       setInputValue("I'm looking for mental health nursing roles");
                                       document.querySelector('textarea').focus();
                                     }}
-                                    className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-3 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                    className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
                                   >
-                                    <div className="flex items-start space-x-2">
-                                      <Heart className="w-5 h-5" style={{color: '#0068A3'}} />
+                                    <div className="flex items-start space-x-3">
+                                      <Heart className="w-6 h-6" style={{color: '#0068A3'}} />
                                       <div>
-                                        <h4 className="text-slate-600 font-medium mb-1 text-xs">Mental Health Roles</h4>
+                                        <h4 className="text-slate-600 font-medium mb-1 text-sm">Mental Health Roles</h4>
                                         <p className="text-slate-400 text-xs font-normal">
                                           Explore nursing positions
                                         </p>
@@ -796,12 +795,12 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                                       setInputValue("Show me support worker positions for learning disabilities");
                                       document.querySelector('textarea').focus();
                                     }}
-                                    className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-3 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                    className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
                                   >
-                                    <div className="flex items-start space-x-2">
-                                      <User className="w-5 h-5" style={{color: '#0068A3'}} />
+                                    <div className="flex items-start space-x-3">
+                                      <User className="w-6 h-6" style={{color: '#0068A3'}} />
                                       <div>
-                                        <h4 className="text-slate-600 font-medium mb-1 text-xs">Support Worker Roles</h4>
+                                        <h4 className="text-slate-600 font-medium mb-1 text-sm">Support Worker Roles</h4>
                                         <p className="text-slate-400 text-xs font-normal">
                                           Learning disabilities support
                                         </p>
@@ -814,12 +813,12 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                                       setInputValue("I'm new to healthcare - what entry level positions are available?");
                                       document.querySelector('textarea').focus();
                                     }}
-                                    className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-3 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                    className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
                                   >
-                                    <div className="flex items-start space-x-2">
-                                      <Sparkles className="w-5 h-5" style={{color: '#0068A3'}} />
+                                    <div className="flex items-start space-x-3">
+                                      <Sparkles className="w-6 h-6" style={{color: '#0068A3'}} />
                                       <div>
-                                        <h4 className="text-slate-600 font-medium mb-1 text-xs">New to Healthcare</h4>
+                                        <h4 className="text-slate-600 font-medium mb-1 text-sm">New to Healthcare</h4>
                                         <p className="text-slate-400 text-xs font-normal">
                                           Discover entry-level opportunities
                                         </p>
@@ -832,13 +831,13 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
 
                             {/* Job Cards */}
                             {message.matchingJobs && message.matchingJobs.length > 0 && (
-                              <div className="pl-12 mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                              <div className="pl-16 mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {sampleJobs
                                   .filter(job => message.matchingJobs.includes(job.id))
                                   .map(job => (
-                                    <div key={job.id} className="bg-white border border-gray-200 rounded-2xl p-3 hover:border-gray-300 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group">
-                                      <div className="flex justify-between items-start mb-2">
-                                        <div className="inline-block px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                                    <div key={job.id} className="bg-white border border-gray-200 rounded-2xl p-4 hover:border-gray-300 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group">
+                                      <div className="flex justify-between items-start mb-3">
+                                        <div className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
                                           {job.category}
                                         </div>
                                         <span className="text-xs text-slate-400 flex items-center">
@@ -847,10 +846,10 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                                         </span>
                                       </div>
                                       
-                                      <h4 className="text-slate-600 mb-1 text-xs font-semibold leading-tight">{job.title}</h4>
-                                      <p className="text-slate-400 text-xs mb-2 line-clamp-2 font-normal">{job.description}</p>
+                                      <h4 className="text-slate-600 mb-2 text-sm font-semibold leading-tight">{job.title}</h4>
+                                      <p className="text-slate-400 text-xs mb-3 line-clamp-2 font-normal">{job.description}</p>
                                       
-                                      <div className="flex items-center gap-2 text-xs text-slate-300 mb-2 font-normal">
+                                      <div className="flex items-center gap-3 text-xs text-slate-300 mb-3 font-normal">
                                         <span className="flex items-center">
                                           <MapPin className="w-3 h-3 mr-1" />
                                           {job.location}
@@ -861,7 +860,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                                         </span>
                                       </div>
                                       
-                                      <div className="flex flex-wrap gap-1 mb-2">
+                                      <div className="flex flex-wrap gap-1 mb-3">
                                         {job.skills.slice(0, 2).map((skill, index) => (
                                           <span key={index} className="bg-slate-100 text-slate-500 px-2 py-1 rounded-lg text-xs font-normal">
                                             {skill}
@@ -870,10 +869,10 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                                       </div>
                                       
                                       <div className="flex justify-between items-center">
-                                        <div className="text-slate-600 text-xs font-semibold">{job.salary}</div>
+                                        <div className="text-slate-600 text-sm font-semibold">{job.salary}</div>
                                         <button
                                           onClick={() => handleJobClick(job)}
-                                          className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 rounded-lg transition-all duration-300 flex items-center space-x-1 text-xs shadow-sm hover:shadow-md"
+                                          className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2 text-xs shadow-sm hover:shadow-md"
                                         >
                                           <span>View</span>
                                           <ArrowRight className="w-3 h-3" />
@@ -895,9 +894,9 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
             {/* Loading indicator */}
             {isLoading && (
               <div className="flex justify-start animate-fade-in-up" style={{ animation: 'fadeInUp 0.5s ease-out forwards' }}>
-                <div className="bg-transparent border border-gray-200 rounded-3xl p-6 relative">
-                  <div className="absolute top-4 left-4 w-8 h-8">
-                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
+                <div className="bg-transparent border border-gray-200 rounded-3xl p-8 relative">
+                  <div className="absolute top-6 left-6 w-10 h-10">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-10 h-10">
                       {/* Background wave (tinted down) */}
                       <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
                             stroke="#3b82f6" 
@@ -923,7 +922,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                       </path>
                     </svg>
                   </div>
-                  <div className="pl-12 flex items-center space-x-2">
+                  <div className="pl-16 flex items-center space-x-2">
                     <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
                     <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                     <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
@@ -938,24 +937,24 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
       </div>
 
       {/* Input Area - Fixed at bottom */}
-      <div className="flex-shrink-0 p-6 pb-8 bg-transparent">
+      <div className="flex-shrink-0 p-12 pb-16 bg-transparent">
         <div className="relative max-w-4xl mx-auto">
           <textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Ask about healthcare roles, locations, or get career advice..."
-            className="w-full resize-none rounded-full px-5 py-4 pr-24 focus:outline-none bg-white text-slate-700 placeholder-slate-400 text-sm shadow-sm border-2 border-white"
+            className="w-full resize-none rounded-full px-6 py-6 pr-32 focus:outline-none bg-white text-slate-700 placeholder-slate-400 text-sm shadow-sm border-2 border-white"
             style={{
-              minHeight: '56px',
-              maxHeight: '112px',
+              minHeight: '72px',
+              maxHeight: '140px',
               boxShadow: '0 0 0 2px white, 0 0 20px rgba(117, 205, 214, 0.3)',
               animation: 'pulse-glow 2s ease-in-out infinite alternate'
             }}
             disabled={isLoading}
             onInput={(e) => {
               e.target.style.height = 'auto';
-              e.target.style.height = Math.min(e.target.scrollHeight, 112) + 'px';
+              e.target.style.height = Math.min(e.target.scrollHeight, 140) + 'px';
             }}
           />
           
@@ -995,12 +994,12 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
           />
           
           {/* Button container - positioned to align with textarea center */}
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
             {/* CV Upload Button */}
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={isLoading}
-              className="text-slate-300 hover:text-slate-500 w-8 h-8 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center hover:bg-sky-100 relative"
+              className="text-slate-300 hover:text-slate-500 w-10 h-10 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center hover:bg-sky-100 relative"
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
             >
@@ -1008,9 +1007,9 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
               
               {/* Tooltip */}
               {showTooltip && (
-                <div className="absolute right-0 bottom-full mb-2 bg-slate-600 text-white px-2 py-1 rounded-lg shadow-lg whitespace-nowrap text-xs z-50">
+                <div className="absolute right-0 bottom-full mb-2 bg-slate-600 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap text-xs z-50">
                   Upload your CV for personalized matches
-                  <div className="absolute top-full right-3 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-slate-600"></div>
+                  <div className="absolute top-full right-4 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-slate-600"></div>
                 </div>
               )}
             </button>
@@ -1019,9 +1018,9 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
             <button
               onClick={handleSendMessage}
               disabled={isLoading || !inputValue.trim()}
-              className="bg-slate-600 hover:bg-slate-700 text-white w-10 h-10 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-sm"
+              className="bg-slate-600 hover:bg-slate-700 text-white w-12 h-12 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-sm"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-5 h-5" />
             </button>
           </div>
         </div>
