@@ -47,7 +47,7 @@
 
 /* Custom input styles */
 .chat-input {
-  animation: pulse-glow 2s ease-in-out infinite;
+  animation: pulse-glow 4s ease-in-out infinite;
   box-shadow: 
     0 0 0 2px white,
     0 0 8px rgba(24, 57, 105, 0.3),
