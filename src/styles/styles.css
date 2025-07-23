@@ -127,7 +127,7 @@
 
 .ai-message-container {
   background: transparent;
-  border: 1px solid #e5e7eb;
+  border: 2px solid #e5e7eb;
   border-radius: 24px;
   padding: 40px;
   position: relative;
@@ -147,7 +147,8 @@
   color: #64748b;
   line-height: 1.6;
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 300;
+  font-family: "figtree";
 }
 
 /* Quick action buttons */
