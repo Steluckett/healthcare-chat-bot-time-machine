@@ -37,14 +37,11 @@ const FreshJobsChat = () => {
   const fileInputRef = useRef(null);
 
   const scrollToMessage = () => {
-    // Use setTimeout to ensure DOM is updated before scrolling
-    setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ 
-        behavior: "smooth", 
-        block: "end",  // Scroll to end, not center
-        inline: "nearest" 
-      });
-    }, 100);
+    // Scroll to bottom of messages container
+    const messagesContainer = document.querySelector('.messages-container');
+    if (messagesContainer) {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
   };
 
   // Auto-scroll when messages change
