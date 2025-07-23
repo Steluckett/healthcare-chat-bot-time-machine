@@ -46,6 +46,10 @@
 .messages-container {
   padding: 48px;
   padding-bottom: 40px;
+  min-height: calc(100vh - 200px); /* Ensure container is tall enough */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Pin messages to top */
 }
 
 /* Message bubbles should stack vertically from top, newest at bottom */
@@ -53,6 +57,8 @@
   display: flex;
   flex-direction: column;
   gap: 48px;
+  flex-grow: 1; /* Allow messages to grow and push down */
+  justify-content: flex-start; /* Messages start from top */
 }
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
