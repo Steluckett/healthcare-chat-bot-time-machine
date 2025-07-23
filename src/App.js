@@ -263,11 +263,6 @@ const FreshJobsChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Removed auto-scroll on message changes
-  // useEffect(() => {
-  //   scrollToMessage();
-  // }, [messages]);
-
   useEffect(() => {
     setJobs(sampleJobs);
   }, []);
@@ -612,9 +607,6 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
         aiResponse.matchingJobs = analyzeUserInput(inputValue);
       }
 
-      // Remove the final safety net that always shows jobs
-      // Only show jobs if the user is actually asking about careers/jobs
-
       const aiMessage = {
         id: Date.now() + 1,
         type: 'ai',
@@ -654,20 +646,23 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
   };
 
   return (
-    <div className="w-full relative" style={{
-      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-    }}>
+    <div 
+      className="w-screen h-screen flex flex-col relative overflow-hidden bg-transparent" 
+      style={{
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+      }}
+    >
       {/* Subtle background elements */}
       <div className="absolute inset-0 overflow-hidden opacity-30">
         <div className="absolute w-96 h-96 -top-48 -left-48 bg-gradient-to-br from-sky-200/20 to-cyan-300/20 rounded-full blur-3xl" />
         <div className="absolute w-80 h-80 -bottom-40 -right-40 bg-gradient-to-tl from-blue-200/20 to-teal-300/20 rounded-full blur-3xl" />
       </div>
 
-      {/* Main chat container */}
-      <div className="relative z-10 w-full flex flex-col">
+      {/* Main chat container - takes full height minus input area */}
+      <div className="relative z-10 flex-1 flex flex-col min-h-0">
         {/* CV Status */}
         {userCV && (
-          <div className="mx-4 mt-4 mb-2">
+          <div className="mx-6 mt-6 mb-4 flex-shrink-0">
             <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <FileText className="w-5 h-5 text-emerald-600" />
@@ -686,8 +681,8 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
           </div>
         )}
 
-        {/* Messages */}
-<div className="px-4 py-2 space-y-8">
+        {/* Messages - scrollable area */}
+        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-8">
           {messages.map((message, index) => (
             <div 
               key={message.id} 
@@ -934,62 +929,77 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
           
           <div ref={messagesEndRef} />
         </div>
+      </div>
 
-        {/* Input Area */}
-        <div className="p-4">
-          <div className="relative">
-            <textarea
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Ask about healthcare roles, locations, or get career advice..."
-              className="w-full resize-none rounded-full px-6 py-5 pr-24 focus:outline-none focus:ring-2 focus:ring-sky-300 bg-white text-slate-700 placeholder-slate-400 border border-sky-200 text-sm"
-              rows="1"
-              style={{ minHeight: '68px', maxHeight: '140px' }}
-              disabled={isLoading}
-              onInput={(e) => {
-                e.target.style.height = 'auto';
-                e.target.style.height = Math.min(e.target.scrollHeight, 140) + 'px';
-              }}
-            />
-            
-            {/* Hidden file input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".pdf,.docx,.doc,.txt"
-              onChange={handleFileSelect}
-              className="hidden"
-            />
-            
-            {/* CV Upload Button */}
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isLoading}
-              className="absolute right-16 top-5 text-slate-300 hover:text-slate-500 w-8 h-8 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center hover:bg-sky-100"
-              onMouseEnter={() => setShowTooltip(true)}
-              onMouseLeave={() => setShowTooltip(false)}
-            >
-              <Upload className="w-4 h-4" />
-            </button>
-            
-            {/* Tooltip */}
-            {showTooltip && (
-              <div className="absolute right-12 bottom-18 bg-slate-600 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap text-xs z-50">
-                Upload your CV for personalized matches
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-slate-600"></div>
-              </div>
-            )}
-            
-            {/* Send Button */}
-            <button
-              onClick={handleSendMessage}
-              disabled={isLoading || !inputValue.trim()}
-              className="absolute right-3 top-3 bg-slate-600 hover:bg-slate-700 text-white w-12 h-12 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-sm"
-            >
-              <Send className="w-4 h-4" />
-            </button>
-          </div>
+      {/* Input Area - Fixed at bottom */}
+      <div className="p-6 flex-shrink-0 bg-transparent">
+        <div className="relative max-w-4xl mx-auto">
+          <textarea
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Ask about healthcare roles, locations, or get career advice..."
+            className="w-full resize-none rounded-full px-6 py-5 pr-28 focus:outline-none bg-white text-slate-700 placeholder-slate-400 text-sm shadow-sm border-2 border-white flex items-center"
+            style={{
+              minHeight: '68px',
+              maxHeight: Math.min(window.innerHeight * 0.2, 130) + 'px',
+              boxShadow: '0 0 0 2px white, 0 0 20px rgba(117, 205, 214, 0.4), 0 0 30px rgba(117, 205, 214, 0.2)',
+              lineHeight: '1.5',
+              paddingTop: '22px',
+              paddingBottom: '22px'
+            }}
+            disabled={isLoading}
+            onInput={(e) => {
+              // Only resize if content actually requires more height
+              const minHeight = 68;
+              const maxHeight = Math.min(window.innerHeight * 0.2, 130);
+              
+              // Reset height to measure scroll height
+              e.target.style.height = minHeight + 'px';
+              
+              // Only grow if content exceeds the minimum height
+              if (e.target.scrollHeight > minHeight) {
+                e.target.style.height = Math.min(e.target.scrollHeight, maxHeight) + 'px';
+              }
+            }}
+          />
+          
+          {/* Hidden file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.docx,.doc,.txt"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+          
+          {/* CV Upload Button */}
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isLoading}
+            className="absolute right-20 top-1/2 transform -translate-y-1/2 text-slate-300 hover:text-slate-500 w-12 h-12 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center hover:bg-sky-100"
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+          >
+            <Upload className="w-5 h-5" />
+          </button>
+          
+          {/* Tooltip */}
+          {showTooltip && (
+            <div className="absolute right-16 bottom-full mb-2 bg-slate-600 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap text-xs z-50">
+              Upload your CV for personalized matches
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-slate-600"></div>
+            </div>
+          )}
+          
+          {/* Send Button */}
+          <button
+            onClick={handleSendMessage}
+            disabled={isLoading || !inputValue.trim()}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-slate-600 hover:bg-slate-700 text-white w-12 h-12 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-sm"
+          >
+            <Send className="w-5 h-5" />
+          </button>
         </div>
       </div>
 
@@ -998,7 +1008,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
         <div 
           className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50"
         >
-          <div className="bg-white rounded-2xl max-w-2xl w-full shadow-xl border border-sky-100">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-xl border border-sky-100">
             <div className="p-6">
               <div className="flex justify-between items-start mb-6">
                 <div>
