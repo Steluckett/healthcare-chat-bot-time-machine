@@ -39,26 +39,28 @@
   max-width: 1440px;
   margin: 0 auto;
   background: transparent;
-  min-height: 100vh;
-  padding-bottom: 200px; /* Space for fixed input */
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .messages-container {
+  flex: 1;
+  overflow-y: auto;
   padding: 48px;
   padding-bottom: 40px;
-  min-height: calc(100vh - 200px); /* Ensure container is tall enough */
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Pin messages to top */
 }
 
-/* Message bubbles should stack vertically from top, newest at bottom */
+/* Message bubbles should stack vertically and push up from bottom */
 .messages-list {
   display: flex;
   flex-direction: column;
   gap: 48px;
-  flex-grow: 1; /* Allow messages to grow and push down */
-  justify-content: flex-start; /* Messages start from top */
+  justify-content: flex-end; /* Push messages to bottom initially */
+  min-height: 100%; /* Take full height */
+  padding-top: auto; /* Allow padding to push content up */
 }
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
@@ -266,6 +268,8 @@
 
 .input-wrapper {
   pointer-events: all; /* Re-enable clicks for the actual input area */
+  max-width: 1440px;
+  margin: 0 auto;
 }
 
 .input-wrapper {
