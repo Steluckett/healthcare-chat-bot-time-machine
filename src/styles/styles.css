@@ -48,10 +48,10 @@
   padding-bottom: 40px;
 }
 
-/* Message bubbles - newest at TOP, previous messages below */
+/* Message bubbles - newest at TOP, previous messages get pushed UP */
 .messages-list {
   display: flex;
-  flex-direction: column-reverse; /* This makes newest messages appear at top */
+  flex-direction: column;
   gap: 48px;
 }
 .custom-scrollbar::-webkit-scrollbar {
