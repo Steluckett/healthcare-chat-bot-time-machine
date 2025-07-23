@@ -33,18 +33,16 @@ const FreshJobsChat = () => {
   const [showJobModal, setShowJobModal] = useState(false);
   const [userCV, setUserCV] = useState(null);
   const [showTooltip, setShowTooltip] = useState(false);
+  const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  const scrollToTop = () => {
-    const messagesContainer = document.querySelector('.messages-container');
-    if (messagesContainer) {
-      messagesContainer.scrollTo({ top: 0, behavior: "smooth" });
-    }
+  const scrollToMessage = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Auto-scroll when messages change - scroll to TOP instead of bottom
+  // Auto-scroll when messages change
   useEffect(() => {
-    scrollToTop();
+    scrollToMessage();
   }, [messages]);
 
   useEffect(() => {
@@ -629,6 +627,9 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
               </div>
             </div>
           )}
+          
+          {/* This div marks the end of messages for auto-scroll */}
+          <div ref={messagesEndRef} style={{ height: '1px' }} />
         </div>
       </div>
 
