@@ -1,0 +1,313 @@
+/* src/styles/styles.css */
+
+/* Animation keyframes */
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0 2px white, 0 0 20px rgba(117, 205, 214, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 0 2px white, 0 0 30px rgba(117, 205, 214, 0.6);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation classes */
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Custom input styles */
+.chat-input {
+  animation: pulse-glow 2s ease-in-out infinite alternate;
+  box-shadow: 0 0 0 2px white, 0 0 20px rgba(117, 205, 214, 0.3);
+}
+
+/* Custom scrollbar styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Job card hover effects */
+.job-card {
+  transition: all 0.3s ease;
+}
+
+.job-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Button hover effects */
+.btn-primary {
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Message bubble styles */
+.message-bubble {
+  max-width: 85%;
+}
+
+.user-message {
+  color: #0068A3;
+}
+
+.ai-message-container {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 40px;
+  position: relative;
+}
+
+/* Icon positioning */
+.ai-icon {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  width: 48px;
+  height: 48px;
+}
+
+.message-content {
+  padding-left: 80px;
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+/* Quick action buttons */
+.quick-action-btn {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  padding: 16px;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.quick-action-btn:hover {
+  background: #f9fafb;
+  transform: scale(1.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Job cards grid */
+.jobs-grid {
+  padding-left: 80px;
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+/* Individual job card */
+.job-card-container {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.job-card-container:hover {
+  border-color: #d1d5db;
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading animation */
+.loading-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loading-dot {
+  width: 8px;
+  height: 8px;
+  background: #60a5fa;
+  border-radius: 50%;
+  animation: bounce 1.4s ease-in-out infinite both;
+}
+
+.loading-dot:nth-child(1) { animation-delay: -0.32s; }
+.loading-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 50;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  max-width: 672px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e0f2fe;
+}
+
+/* Tooltip styles */
+.tooltip {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  margin-bottom: 8px;
+  background: #475569;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  font-size: 12px;
+  z-index: 50;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 16px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #475569;
+}
+
+/* Input area styles */
+.input-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 48px;
+  padding-bottom: 64px;
+  background: transparent;
+  z-index: 50;
+}
+
+.input-wrapper {
+  position: relative;
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.chat-textarea {
+  width: 100%;
+  resize: none;
+  border-radius: 9999px;
+  padding: 24px;
+  padding-right: 128px;
+  outline: none;
+  background: white;
+  color: #334155;
+  min-height: 72px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: 2px solid white;
+}
+
+.chat-textarea::placeholder {
+  color: #94a3b8;
+}
+
+.input-buttons {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* CV status styles */
+.cv-status {
+  background: #ecfdf5;
+  border: 1px solid #d1fae5;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .message-content {
+    padding-left: 0;
+    margin-top: 60px;
+  }
+  
+  .ai-icon {
+    top: 16px;
+    left: 16px;
+    width: 32px;
+    height: 32px;
+  }
+  
+  .jobs-grid {
+    padding-left: 0;
+    grid-template-columns: 1fr;
+  }
+  
+  .input-container {
+    padding: 24px;
+    padding-bottom: 32px;
+  }
+  
+  .chat-textarea {
+    padding-right: 100px;
+  }
+}
