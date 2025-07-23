@@ -48,7 +48,17 @@
   padding-bottom: 40px;
 }
 
-/* Message bubbles - newest at TOP, previous messages get pushed UP */
+/* Messages container - stack from bottom, newest appears at top */
+.messages-container {
+  padding: 48px;
+  padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Push messages to bottom of container */
+  min-height: calc(100vh - 200px); /* Take up viewport height */
+}
+
+/* Message bubbles - stack normally but container pushes them up */
 .messages-list {
   display: flex;
   flex-direction: column;
