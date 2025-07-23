@@ -46,6 +46,8 @@
 .messages-container {
   padding: 48px;
   padding-bottom: 40px;
+  max-height: calc(100vh - 200px); /* Leave space for input */
+  overflow-y: auto; /* Make it scrollable */
 }
 
 /* Message bubbles should stack vertically from top, newest at bottom */
