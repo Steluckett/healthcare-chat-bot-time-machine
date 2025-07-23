@@ -37,11 +37,7 @@ const FreshJobsChat = () => {
   const fileInputRef = useRef(null);
 
   const scrollToMessage = () => {
-    // Scroll to top to show the newest message
-    window.scrollTo({ 
-      top: 0, 
-      behavior: 'smooth' 
-    });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   // Auto-scroll when messages change
@@ -388,9 +384,9 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
           </div>
         )}
 
-        {/* Messages - render in reverse order so newest appears at top */}
+        {/* Messages */}
         <div className="messages-list">
-          {[...messages].reverse().map((message, index) => (
+          {messages.map((message, index) => (
             <div 
               key={message.id} 
               className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}
