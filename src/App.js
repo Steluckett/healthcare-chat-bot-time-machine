@@ -662,7 +662,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
       <div className="relative z-10 flex-1 flex flex-col min-h-0">
         {/* CV Status */}
         {userCV && (
-          <div className="mx-6 mt-6 mb-4 flex-shrink-0">
+          <div className="mx-4 mt-4 mb-2 flex-shrink-0">
             <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <FileText className="w-5 h-5 text-emerald-600" />
@@ -682,7 +682,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
         )}
 
         {/* Messages - scrollable area */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-8">
+        <div className="flex-1 overflow-y-auto px-4 py-2 space-y-8">
           {messages.map((message, index) => (
             <div 
               key={message.id} 
@@ -932,37 +932,38 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
       </div>
 
       {/* Input Area - Fixed at bottom */}
-      <div className="p-6 flex-shrink-0 bg-transparent">
+      <div className="p-4 flex-shrink-0 bg-transparent">
         <div className="relative max-w-4xl mx-auto">
           <textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Ask about healthcare roles, locations, or get career advice..."
-            className="w-full resize-none rounded-full px-6 py-5 pr-28 focus:outline-none bg-white text-slate-700 placeholder-slate-400 text-sm shadow-sm border-2 border-white flex items-center"
+            className="w-full resize-none rounded-full px-6 py-6 pr-32 focus:outline-none bg-white text-slate-700 placeholder-slate-400 text-sm shadow-sm border-2 border-white"
             style={{
-              minHeight: '68px',
-              maxHeight: Math.min(window.innerHeight * 0.2, 130) + 'px',
-              boxShadow: '0 0 0 2px white, 0 0 20px rgba(117, 205, 214, 0.4), 0 0 30px rgba(117, 205, 214, 0.2)',
-              lineHeight: '1.5',
-              paddingTop: '22px',
-              paddingBottom: '22px'
+              minHeight: '72px',
+              maxHeight: Math.min(window.innerHeight * 0.2, 140) + 'px',
+              boxShadow: '0 0 0 2px white, 0 0 20px rgba(117, 205, 214, 0.3)',
+              animation: 'pulse-glow 2s ease-in-out infinite alternate'
             }}
             disabled={isLoading}
             onInput={(e) => {
-              // Only resize if content actually requires more height
-              const minHeight = 68;
-              const maxHeight = Math.min(window.innerHeight * 0.2, 130);
-              
-              // Reset height to measure scroll height
-              e.target.style.height = minHeight + 'px';
-              
-              // Only grow if content exceeds the minimum height
-              if (e.target.scrollHeight > minHeight) {
-                e.target.style.height = Math.min(e.target.scrollHeight, maxHeight) + 'px';
-              }
+              e.target.style.height = 'auto';
+              const maxHeight = Math.min(window.innerHeight * 0.2, 140);
+              e.target.style.height = Math.min(e.target.scrollHeight, maxHeight) + 'px';
             }}
           />
+          
+          <style jsx>{`
+            @keyframes pulse-glow {
+              0% {
+                box-shadow: 0 0 0 2px white, 0 0 20px rgba(117, 205, 214, 0.3);
+              }
+              100% {
+                box-shadow: 0 0 0 2px white, 0 0 30px rgba(117, 205, 214, 0.6);
+              }
+            }
+          `}</style>
           
           {/* Hidden file input */}
           <input
@@ -973,33 +974,36 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
             className="hidden"
           />
           
-          {/* CV Upload Button */}
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isLoading}
-            className="absolute right-20 top-1/2 transform -translate-y-1/2 text-slate-300 hover:text-slate-500 w-12 h-12 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center hover:bg-sky-100"
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
-          >
-            <Upload className="w-5 h-5" />
-          </button>
-          
-          {/* Tooltip */}
-          {showTooltip && (
-            <div className="absolute right-16 bottom-full mb-2 bg-slate-600 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap text-xs z-50">
-              Upload your CV for personalized matches
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-slate-600"></div>
-            </div>
-          )}
-          
-          {/* Send Button */}
-          <button
-            onClick={handleSendMessage}
-            disabled={isLoading || !inputValue.trim()}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-slate-600 hover:bg-slate-700 text-white w-12 h-12 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-sm"
-          >
-            <Send className="w-5 h-5" />
-          </button>
+          {/* Button container - positioned to align with textarea center */}
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+            {/* CV Upload Button */}
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isLoading}
+              className="text-slate-300 hover:text-slate-500 w-10 h-10 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center hover:bg-sky-100 relative"
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+            >
+              <Upload className="w-4 h-4" />
+              
+              {/* Tooltip */}
+              {showTooltip && (
+                <div className="absolute right-0 bottom-full mb-2 bg-slate-600 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap text-xs z-50">
+                  Upload your CV for personalized matches
+                  <div className="absolute top-full right-4 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-slate-600"></div>
+                </div>
+              )}
+            </button>
+            
+            {/* Send Button */}
+            <button
+              onClick={handleSendMessage}
+              disabled={isLoading || !inputValue.trim()}
+              className="bg-slate-600 hover:bg-slate-700 text-white w-12 h-12 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-sm"
+            >
+              <Send className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </div>
 
