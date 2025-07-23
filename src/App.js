@@ -351,14 +351,13 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
 
   return (
     <div 
-      className="w-full relative bg-transparent" 
+      className="chat-container" 
       style={{
-        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        minHeight: '400px'
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
       }}
     >
       {/* Main chat container - scrollable content */}
-      <div className="relative z-10 pb-40 px-12">
+      <div className="messages-container custom-scrollbar">
         {/* CV Status */}
         {userCV && (
           <div className="mt-4 mb-2">
@@ -381,7 +380,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
         )}
 
         {/* Messages */}
-        <div className="py-2 space-y-12">
+        <div className="messages-list">
           {messages.map((message, index) => (
             <div 
               key={message.id} 
