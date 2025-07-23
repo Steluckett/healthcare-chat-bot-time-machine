@@ -660,9 +660,9 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
       }}
     >
-      {/* Chat messages container - scrollable */}
-      <div className="flex-1 overflow-y-auto px-12">
-        <div className="max-w-4xl mx-auto">
+      {/* Chat messages container - scrollable with full width */}
+      <div className="flex-1 overflow-y-auto px-4">
+        <div className="w-full">
           {/* CV Status */}
           {userCV && (
             <div className="mt-4 mb-2">
@@ -695,7 +695,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                   animation: 'fadeInUp 0.5s ease-out forwards'
                 }}
               >
-                <div className={`max-w-[85%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+                <div className={`w-full ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
                   <div className={`flex items-start space-x-3 ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                     {message.type === 'user' ? (
                       // User message layout - icon on left, blue text on transparent background
@@ -714,8 +714,8 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                     ) : (
                       // AI message layout - rounded box with icon inside top left
                       <>
-                        <div className="flex-1">
-                          <div className="bg-transparent border border-gray-200 rounded-3xl p-8 relative">
+                        <div className="flex-1 w-full">
+                          <div className="bg-transparent border border-gray-200 rounded-3xl p-8 relative w-full">
                             {/* Icon inside the box, top left */}
                             <div className="absolute top-6 left-6 w-10 h-10">
                               <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-10 h-10">
@@ -756,7 +756,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                                 <p className="text-slate-400 text-xs mb-3 font-normal">
                                   Choose an option to get started:
                                 </p>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                                   <button
                                     onClick={() => fileInputRef.current?.click()}
                                     className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
@@ -831,7 +831,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
 
                             {/* Job Cards */}
                             {message.matchingJobs && message.matchingJobs.length > 0 && (
-                              <div className="pl-16 mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="pl-16 mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                                 {sampleJobs
                                   .filter(job => message.matchingJobs.includes(job.id))
                                   .map(job => (
@@ -936,9 +936,9 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
         </div>
       </div>
 
-      {/* Input Area - Fixed at bottom */}
-      <div className="flex-shrink-0 p-12 pb-16 bg-transparent">
-        <div className="relative max-w-full mx-auto">
+      {/* Input Area - Fixed at bottom with full width */}
+      <div className="flex-shrink-0 p-4 pb-8 bg-transparent">
+        <div className="relative w-full">
           <textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
