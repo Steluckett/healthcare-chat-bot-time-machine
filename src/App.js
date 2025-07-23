@@ -654,10 +654,10 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
       }}
     >
       {/* Main chat container - scrollable content */}
-      <div className="relative z-10 pb-24">
+      <div className="relative z-10 pb-40 px-12">
         {/* CV Status */}
         {userCV && (
-          <div className="mx-4 mt-4 mb-2">
+          <div className="mt-4 mb-2">
             <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <FileText className="w-5 h-5 text-emerald-600" />
@@ -677,13 +677,14 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
         )}
 
         {/* Messages */}
-        <div className="px-4 py-2 space-y-8">
+        <div className="py-2 space-y-8">
           {messages.map((message, index) => (
             <div 
               key={message.id} 
-              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}
               style={{
-                paddingTop: message.id === 1 && index === 0 ? '40px' : '0px'
+                paddingTop: message.id === 1 && index === 0 ? '40px' : '0px',
+                animation: 'fadeInUp 0.5s ease-out forwards'
               }}
             >
               <div className={`max-w-[85%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
@@ -884,7 +885,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
           
           {/* Loading indicator */}
           {isLoading && (
-            <div className="flex justify-start">
+            <div className="flex justify-start animate-fade-in-up" style={{ animation: 'fadeInUp 0.5s ease-out forwards' }}>
               <div className="bg-transparent border border-gray-200 rounded-3xl p-8 relative">
                 <div className="absolute top-6 left-6 w-10 h-10">
                   <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-10 h-10">
@@ -927,7 +928,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
       </div>
 
       {/* Input Area - Fixed/Floating at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">
+      <div className="fixed bottom-0 left-0 right-0 p-12 pb-16 bg-transparent z-50">
         <div className="relative max-w-4xl mx-auto">
           <textarea
             value={inputValue}
@@ -957,6 +958,21 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
               100% {
                 box-shadow: 0 0 0 2px white, 0 0 30px rgba(117, 205, 214, 0.6);
               }
+            }
+            
+            @keyframes fadeInUp {
+              0% {
+                opacity: 0;
+                transform: translateY(20px);
+              }
+              100% {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+            
+            .animate-fade-in-up {
+              animation: fadeInUp 0.5s ease-out forwards;
             }
           `}</style>
           
