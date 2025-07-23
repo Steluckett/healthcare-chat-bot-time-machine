@@ -32,7 +32,28 @@
   box-shadow: 0 0 0 2px white, 0 0 20px rgba(117, 205, 214, 0.3);
 }
 
-/* Custom scrollbar styles */
+/* Main chat container */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 48px;
+  padding-bottom: 200px; /* Space for fixed input */
+}
+
+/* Message bubbles should stack vertically */
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  min-height: min-content;
+}
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
@@ -234,6 +255,11 @@
   padding-bottom: 64px;
   background: transparent;
   z-index: 50;
+  pointer-events: none; /* Allow clicks to pass through the container */
+}
+
+.input-wrapper {
+  pointer-events: all; /* Re-enable clicks for the actual input area */
 }
 
 .input-wrapper {
