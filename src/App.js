@@ -647,10 +647,9 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
 
   return (
     <div 
-      className="w-full flex flex-col relative overflow-hidden bg-transparent" 
+      className="w-full h-full flex flex-col relative overflow-hidden bg-transparent" 
       style={{
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        height: '100%',
         minHeight: '400px' // Minimum height to ensure usability
       }}
     >
