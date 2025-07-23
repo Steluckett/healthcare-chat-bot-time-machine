@@ -36,6 +36,8 @@
 .chat-container {
   position: relative;
   width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
   background: transparent;
   min-height: 100vh;
   padding-bottom: 200px; /* Space for fixed input */
