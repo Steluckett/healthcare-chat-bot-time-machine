@@ -37,11 +37,11 @@ const FreshJobsChat = () => {
   const fileInputRef = useRef(null);
 
   const scrollToMessage = () => {
-    // Scroll to bottom of messages container
-    const messagesContainer = document.querySelector('.messages-container');
-    if (messagesContainer) {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
+    // Scroll to top to show the newest message
+    window.scrollTo({ 
+      top: 0, 
+      behavior: 'smooth' 
+    });
   };
 
   // Auto-scroll when messages change
