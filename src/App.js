@@ -1,5 +1,21 @@
+// src/App.js
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, MapPin, Clock, Briefcase, Sparkles, ArrowRight, User, Upload, FileText, X, Heart } from 'lucide-react';
+
+// Import data and utilities
+import { sampleJobs } from './data/jobsData';
+import { 
+  findJobsWithinRadius, 
+  extractLocation, 
+  extractCVText, 
+  analyzeQualifications, 
+  filterJobsByQualifications, 
+  analyzeUserInput 
+} from './utils/utils';
+
+// Import styles
+import './styles/styles.css';
 
 const FreshJobsChat = () => {
   const [messages, setMessages] = useState([
@@ -19,245 +35,6 @@ const FreshJobsChat = () => {
   const [showTooltip, setShowTooltip] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
-
-  // Sample jobs data
-  const sampleJobs = [
-    {
-      id: 1,
-      title: "Mental Health Nurse",
-      company: "Cygnet Group",
-      location: "London, England",
-      salary: "£32,000 - £38,000",
-      type: "Full-time",
-      posted: "2 days ago",
-      skills: ["Mental Health Assessment", "Therapeutic Communication", "Risk Assessment", "NMC Registration"],
-      description: "Join our dedicated mental health team providing compassionate care to adults with complex mental health needs. We offer excellent training opportunities and career progression in a supportive environment.",
-      fullDescription: "Join our dedicated mental health team providing compassionate care to adults with complex mental health needs. We offer excellent training opportunities and career progression in a supportive environment. You'll work with a multidisciplinary team to provide holistic care and support recovery journeys. This role offers excellent professional development opportunities and the chance to make a real difference in people's lives.",
-      applyUrl: "https://apply.cygnetgroup.com/job/mental-health-nurse",
-      category: "Mental Health"
-    },
-    {
-      id: 2,
-      title: "Support Worker - Learning Disabilities",
-      company: "Cygnet Group",
-      location: "Birmingham, England",
-      salary: "£22,000 - £26,000",
-      type: "Full-time",
-      posted: "1 day ago",
-      skills: ["Person-Centered Care", "Behavior Support", "Safeguarding", "Team Working"],
-      description: "Support individuals with learning disabilities to live fulfilling lives. No experience required - full training provided. Make a real difference in people's lives.",
-      fullDescription: "Support individuals with learning disabilities to live fulfilling lives. No experience required - full training provided. Make a real difference in people's lives. You'll help with daily activities, social skills development, and promoting independence. We provide comprehensive training and ongoing support to help you succeed in this rewarding role.",
-      applyUrl: "https://apply.cygnetgroup.com/job/support-worker-ld",
-      category: "Learning Disabilities"
-    },
-    {
-      id: 3,
-      title: "Clinical Psychologist",
-      company: "Cygnet Group",
-      location: "Manchester, England",
-      salary: "£45,000 - £55,000",
-      type: "Full-time",
-      posted: "3 days ago",
-      skills: ["Clinical Assessment", "Therapy Delivery", "HCPC Registration", "CBT"],
-      description: "Lead psychological interventions for adults with complex mental health presentations. Excellent supervision and CPD opportunities available.",
-      fullDescription: "Lead psychological interventions for adults with complex mental health presentations. Excellent supervision and CPD opportunities available. You'll conduct assessments, deliver therapy, and work with multidisciplinary teams to support recovery. This role offers excellent career progression opportunities and access to continued professional development.",
-      applyUrl: "https://apply.cygnetgroup.com/job/clinical-psychologist",
-      category: "Mental Health"
-    },
-    {
-      id: 4,
-      title: "Healthcare Assistant",
-      company: "Cygnet Group",
-      location: "Bristol, England",
-      salary: "£20,000 - £24,000",
-      type: "Part-time",
-      posted: "1 day ago",
-      skills: ["Patient Care", "Medication Support", "Documentation", "Compassionate Care"],
-      description: "Provide essential care and support to service users. Flexible hours available. Perfect opportunity to start your healthcare career.",
-      fullDescription: "Provide essential care and support to service users. Flexible hours available. Perfect opportunity to start your healthcare career. You'll assist with personal care, medication administration, and daily living activities. This role offers flexible working arrangements and comprehensive training for those new to healthcare.",
-      applyUrl: "https://apply.cygnetgroup.com/job/healthcare-assistant",
-      category: "Healthcare Support"
-    },
-    {
-      id: 5,
-      title: "Mental Health Support Worker",
-      company: "Cygnet Group",
-      location: "Stockport, England",
-      salary: "£24,000 - £28,000",
-      type: "Full-time",
-      posted: "Today",
-      skills: ["Mental Health Support", "Person-Centered Care", "Crisis Support", "Team Working"],
-      description: "Support individuals with mental health needs in our Stockport facility. Full training provided for the right candidate. Excellent career progression opportunities.",
-      fullDescription: "Support individuals with mental health needs in our Stockport facility. Full training provided for the right candidate. Excellent career progression opportunities. You'll work alongside qualified nurses and other professionals to provide compassionate care and support recovery journeys. This role offers comprehensive training, competitive salary, and the chance to make a real difference in people's lives in your local community.",
-      applyUrl: "https://apply.cygnetgroup.com/job/mh-support-worker-stockport",
-      category: "Mental Health"
-    },
-    {
-      id: 6,
-      title: "Occupational Therapist",
-      company: "Cygnet Group",
-      location: "Leeds, England",
-      salary: "£35,000 - £42,000",
-      type: "Full-time",
-      posted: "4 days ago",
-      skills: ["Assessment", "Treatment Planning", "HCPC Registration", "Rehabilitation"],
-      description: "Help service users develop independence and life skills. Work across multiple services with excellent professional development opportunities.",
-      fullDescription: "Help service users develop independence and life skills. Work across multiple services with excellent professional development opportunities. You'll assess needs, develop treatment plans, and deliver interventions to promote recovery and independence. This role offers variety across different service areas and excellent career progression.",
-      applyUrl: "https://apply.cygnetgroup.com/job/occupational-therapist",
-      category: "Allied Health"
-    }
-  ];
-
-  // Geographic coordinates for UK cities (lat, lng)
-  const cityCoordinates = {
-    'london': { lat: 51.5074, lng: -0.1278 },
-    'birmingham': { lat: 52.4862, lng: -1.8904 },
-    'manchester': { lat: 53.4808, lng: -2.2426 },
-    'stockport': { lat: 53.4106, lng: -2.1575 },
-    'leeds': { lat: 53.8008, lng: -1.5491 },
-    'bristol': { lat: 51.4545, lng: -2.5879 },
-    'liverpool': { lat: 53.4084, lng: -2.9916 },
-    'newcastle': { lat: 54.9783, lng: -1.6178 }
-  };
-
-  // Calculate distance between two points using Haversine formula
-  const calculateDistance = (lat1, lng1, lat2, lng2) => {
-    const R = 3959; // Earth's radius in miles
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLng = (lng2 - lng1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLng/2) * Math.sin(dLng/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c;
-  };
-
-  // Find jobs within 30 miles of user's location
-  const findJobsWithinRadius = (userLocation, maxDistance = 30) => {
-    const userCoords = cityCoordinates[userLocation.toLowerCase()];
-    if (!userCoords) return [];
-
-    const jobsWithDistance = sampleJobs.map(job => {
-      const jobLocation = job.location.split(',')[0].toLowerCase();
-      const jobCoords = cityCoordinates[jobLocation];
-      
-      if (!jobCoords) return null;
-      
-      const distance = calculateDistance(
-        userCoords.lat, userCoords.lng,
-        jobCoords.lat, jobCoords.lng
-      );
-      
-      return {
-        ...job,
-        distance: Math.round(distance),
-        withinRadius: distance <= maxDistance
-      };
-    }).filter(job => job !== null);
-
-    return jobsWithDistance;
-  };
-
-  // Extract location from filename or CV content
-  const extractLocation = (filename, cvContent = '') => {
-    const lowerFilename = filename.toLowerCase();
-    const lowerContent = cvContent.toLowerCase();
-    const locations = Object.keys(cityCoordinates);
-    
-    // First try CV content (more reliable)
-    if (cvContent) {
-      for (const location of locations) {
-        if (lowerContent.includes(location)) {
-          return location;
-        }
-      }
-    }
-    
-    // Fallback to filename
-    for (const location of locations) {
-      if (lowerFilename.includes(location)) {
-        return location;
-      }
-    }
-    
-    return null;
-  };
-
-  // Simple CV text extraction and qualification analysis
-  const extractCVText = (file) => {
-    const filename = file.name.toLowerCase();
-    
-    // Simulate reading CV content based on filename
-    if (filename.includes('jane') || filename.includes('nurse') || filename.includes('stockport')) {
-      return 'Jane Doe Address: 21 Meadow Lane, Stockport, SK4 2AA Registered Mental Health Nurse NMC PIN: RM12345678 experience mental health nursing acute inpatient ward Senior Mental Health Nurse 5 years experience';
-    }
-    
-    return '';
-  };
-
-  // Analyze qualifications from CV content
-  const analyzeQualifications = (cvContent) => {
-    const content = cvContent.toLowerCase();
-    
-    // Check for nursing qualifications
-    const isQualifiedNurse = content.includes('nmc') || content.includes('registered nurse') || content.includes('nmc pin');
-    const isMentalHealthNurse = content.includes('mental health nurse') || content.includes('mental health nursing');
-    const isSeniorNurse = content.includes('senior') || content.includes('lead nurse') || content.includes('years experience');
-    
-    // Check for other qualifications
-    const isHCA = content.includes('healthcare assistant') || content.includes('hca');
-    const isSupportWorker = content.includes('support worker') && !isQualifiedNurse;
-    const isNewGrad = content.includes('newly qualified') || content.includes('new graduate');
-    
-    return {
-      isQualifiedNurse,
-      isMentalHealthNurse,
-      isSeniorNurse,
-      isHCA,
-      isSupportWorker,
-      isNewGrad,
-      experienceLevel: isSeniorNurse ? 'senior' : isQualifiedNurse ? 'qualified' : 'entry-level'
-    };
-  };
-
-  // Filter jobs based on qualifications and location
-  const filterJobsByQualifications = (jobs, qualifications) => {
-    return jobs.filter(job => {
-      const jobTitle = job.title.toLowerCase();
-      const jobCategory = job.category.toLowerCase();
-      
-      // For qualified nurses
-      if (qualifications.isQualifiedNurse) {
-        // Only show nursing roles, clinical roles, or senior positions
-        return jobTitle.includes('nurse') || 
-               jobTitle.includes('clinical') || 
-               jobTitle.includes('psychologist') ||
-               jobCategory.includes('mental health') && !jobTitle.includes('support worker');
-      }
-      
-      // For healthcare assistants
-      if (qualifications.isHCA) {
-        // Show HCA roles and nursing roles (career progression)
-        return jobTitle.includes('healthcare assistant') || 
-               jobTitle.includes('nurse') ||
-               jobTitle.includes('support worker');
-      }
-      
-      // For support workers
-      if (qualifications.isSupportWorker) {
-        // Show support worker roles and HCA roles (career progression)
-        return jobTitle.includes('support worker') || 
-               jobTitle.includes('healthcare assistant');
-      }
-      
-      // For entry-level/no healthcare experience
-      // Only show entry-level roles
-      return jobTitle.includes('support worker') || 
-             jobTitle.includes('healthcare assistant') ||
-             jobTitle.includes('apprentice') ||
-             jobTitle.includes('trainee');
-    });
-  };
 
   const scrollToMessage = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -313,7 +90,7 @@ const FreshJobsChat = () => {
           
           if (userLocation) {
             // Find jobs within 30 miles using actual geographic calculations
-            const jobsWithDistance = findJobsWithinRadius(userLocation, 30);
+            const jobsWithDistance = findJobsWithinRadius(sampleJobs, userLocation, 30);
             const nearbyJobs = jobsWithDistance.filter(job => job.withinRadius);
             
             // Filter jobs based on qualifications
@@ -378,23 +155,8 @@ const FreshJobsChat = () => {
     }
   };
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
-
-    const userMessage = {
-      id: Date.now(),
-      type: 'user',
-      content: inputValue,
-      timestamp: new Date()
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
-    setIsLoading(true);
-
-    try {
-      // Enhanced system prompt with flexible job matching
-      const systemPrompt = `You are an experienced healthcare recruitment specialist working for Cygnet Group, the UK's leading independent provider of mental health and learning disabilities services. You have deep knowledge of healthcare careers and are genuinely passionate about helping people find meaningful work in healthcare.
+  const buildConversationHistory = () => {
+    const systemPrompt = `You are an experienced healthcare recruitment specialist working for Cygnet Group, the UK's leading independent provider of mental health and learning disabilities services. You have deep knowledge of healthcare careers and are genuinely passionate about helping people find meaningful work in healthcare.
 
 ABOUT CYGNET GROUP:
 - Leading independent provider of mental health and learning disabilities services in the UK
@@ -451,115 +213,57 @@ Respond with a JSON object containing:
   "followUpQuestions": [optional single follow-up question]
 }
 
-EXAMPLES:
-User: "I'm thinking about healthcare" → Show jobs [1,2,4] + encouraging response
-User: "What's the salary like?" → Show jobs [1,3,6] + mention salary ranges vary
-User: "Tell me about Cygnet Group" → NO jobs, just company info
-User: "How do I apply?" → NO jobs, just application process info
-User: "What services does Cygnet provide?" → NO jobs, just services info
-User: "Tell me about mental health roles" → Show jobs [1,3,5] + brief mental health info
-
 Your entire response MUST be valid JSON. Only include job IDs when the user is specifically asking about careers or job opportunities.`;
 
-      // Analyze user input for job matching (backup logic)
-      const analyzeUserInput = (input) => {
-        const lowerInput = input.toLowerCase();
-        
-        // Check if this is a job/career-related query
-        const isJobQuery = lowerInput.includes('job') || lowerInput.includes('role') || 
-                          lowerInput.includes('position') || lowerInput.includes('career') || 
-                          lowerInput.includes('work') || lowerInput.includes('salary') || 
-                          lowerInput.includes('training') || lowerInput.includes('qualification') ||
-                          lowerInput.includes('nurse') || lowerInput.includes('support worker') ||
-                          lowerInput.includes('healthcare') || lowerInput.includes('opportunity') ||
-                          lowerInput.includes('hiring') || lowerInput.includes('vacancy') ||
-                          lowerInput.includes('apply') || lowerInput.includes('mental health') ||
-                          lowerInput.includes('learning disabilit') || lowerInput.includes('clinical');
-        
-        // If not a job query, return empty array
-        if (!isJobQuery) {
-          return [];
-        }
-        
-        let suggestedJobs = [];
-        
-        // Mental health related
-        if (lowerInput.includes('mental health') || lowerInput.includes('nursing') || lowerInput.includes('nurse')) {
-          suggestedJobs = [1, 3, 5]; // Mental Health Nurse, Clinical Psychologist, Mental Health Support Worker
-        }
-        // Support worker related
-        else if (lowerInput.includes('support worker') || lowerInput.includes('learning disabilit') || lowerInput.includes('support')) {
-          suggestedJobs = [2, 5]; // Support Worker LD, Mental Health Support Worker
-        }
-        // Entry level
-        else if (lowerInput.includes('entry level') || lowerInput.includes('no experience') || lowerInput.includes('new to healthcare') || lowerInput.includes('beginner') || lowerInput.includes('starting out')) {
-          suggestedJobs = [2, 4, 5]; // Support Worker, Healthcare Assistant, Mental Health Support Worker
-        }
-        // Clinical roles
-        else if (lowerInput.includes('clinical') || lowerInput.includes('psychologist') || lowerInput.includes('therapy') || lowerInput.includes('therapist')) {
-          suggestedJobs = [3, 6]; // Clinical Psychologist, Occupational Therapist
-        }
-        // Part-time/flexible
-        else if (lowerInput.includes('part-time') || lowerInput.includes('flexible') || lowerInput.includes('part time')) {
-          suggestedJobs = [4, 6]; // Healthcare Assistant, Occupational Therapist
-        }
-        // Location-based (show variety)
-        else if (lowerInput.includes('london')) {
-          suggestedJobs = [1]; // Mental Health Nurse in London
-        }
-        else if (lowerInput.includes('birmingham')) {
-          suggestedJobs = [2]; // Support Worker in Birmingham
-        }
-        else if (lowerInput.includes('manchester')) {
-          suggestedJobs = [3]; // Clinical Psychologist in Manchester
-        }
-        else if (lowerInput.includes('stockport')) {
-          suggestedJobs = [5]; // Mental Health Support Worker in Stockport
-        }
-        // General healthcare/career questions
-        else if (lowerInput.includes('healthcare') || lowerInput.includes('career') || lowerInput.includes('job') || lowerInput.includes('work') || lowerInput.includes('role') || lowerInput.includes('position') || lowerInput.includes('opportunity') || lowerInput.includes('salary') || lowerInput.includes('training') || lowerInput.includes('qualification')) {
-          suggestedJobs = [1, 2, 4]; // Good mix of different levels
-        }
-        
-        return suggestedJobs;
-      };
-
-      // Build conversation history for context
-      const buildConversationHistory = () => {
-        const conversationMessages = [];
-        
-        // Add system message
-        conversationMessages.push({
-          role: 'system',
-          content: systemPrompt
-        });
-        
-        // Add recent conversation history (last 6 messages)
-        const recentMessages = messages.slice(-6);
-        
-        recentMessages.forEach(msg => {
-          if (msg.type === 'user') {
-            conversationMessages.push({
-              role: 'user',
-              content: msg.content
-            });
-          } else if (msg.type === 'ai' && msg.id !== 1) {
-            conversationMessages.push({
-              role: 'assistant',
-              content: msg.content
-            });
-          }
-        });
-        
-        // Add current user message
+    const conversationMessages = [];
+    
+    // Add system message
+    conversationMessages.push({
+      role: 'system',
+      content: systemPrompt
+    });
+    
+    // Add recent conversation history (last 6 messages)
+    const recentMessages = messages.slice(-6);
+    
+    recentMessages.forEach(msg => {
+      if (msg.type === 'user') {
         conversationMessages.push({
           role: 'user',
-          content: inputValue
+          content: msg.content
         });
-        
-        return conversationMessages;
-      };
+      } else if (msg.type === 'ai' && msg.id !== 1) {
+        conversationMessages.push({
+          role: 'assistant',
+          content: msg.content
+        });
+      }
+    });
+    
+    // Add current user message
+    conversationMessages.push({
+      role: 'user',
+      content: inputValue
+    });
+    
+    return conversationMessages;
+  };
 
+  const handleSendMessage = async () => {
+    if (!inputValue.trim()) return;
+
+    const userMessage = {
+      id: Date.now(),
+      type: 'user',
+      content: inputValue,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue('');
+    setIsLoading(true);
+
+    try {
       // Enhanced OpenAI API call
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -570,8 +274,8 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
         body: JSON.stringify({
           model: 'gpt-4o-mini',
           messages: buildConversationHistory(),
-          max_tokens: 600, // Reduced for more concise responses
-          temperature: 0.7, // Slightly lower for more consistent job matching
+          max_tokens: 600,
+          temperature: 0.7,
           top_p: 0.9,
           frequency_penalty: 0.1,
           presence_penalty: 0.1,
@@ -628,7 +332,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
         id: Date.now() + 1,
         type: 'ai',
         content: "I'm here to help you with information about Cygnet Group and our healthcare opportunities. What would you like to know?",
-        matchingJobs: fallbackJobs, // Only show jobs if it's a job-related query
+        matchingJobs: fallbackJobs,
         followUpQuestions: ["Are you interested in learning about our available roles?"],
         timestamp: new Date()
       };
@@ -650,7 +354,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
       className="w-full relative bg-transparent" 
       style={{
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        minHeight: '400px' // Minimum height to ensure usability
+        minHeight: '400px'
       }}
     >
       {/* Main chat container - scrollable content */}
@@ -658,7 +362,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
         {/* CV Status */}
         {userCV && (
           <div className="mt-4 mb-2">
-            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between">
+            <div className="cv-status">
               <div className="flex items-center space-x-3">
                 <FileText className="w-5 h-5 text-emerald-600" />
                 <div>
@@ -683,33 +387,32 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
               key={message.id} 
               className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}
               style={{
-                paddingTop: message.id === 1 && index === 0 ? '40px' : '0px',
-                animation: 'fadeInUp 0.5s ease-out forwards'
+                paddingTop: message.id === 1 && index === 0 ? '40px' : '0px'
               }}
             >
-              <div className={`max-w-[85%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+              <div className={`message-bubble ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
                 <div className={`flex items-start space-x-3 ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                   {message.type === 'user' ? (
-                    // User message layout - icon on left, blue text on transparent background
+                    // User message layout
                     <>
                       <div className="flex-1 text-right">
                         <div className="inline-block">
-                          <div style={{color: '#0068A3'}} className="leading-relaxed text-lg px-4 py-2">
+                          <div className="user-message leading-relaxed text-lg px-4 py-2">
                             {message.content}
                           </div>
                         </div>
                       </div>
                       <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
-                        <User className="w-8 h-8" style={{color: '#0068A3'}} />
+                        <User className="w-8 h-8 user-message" />
                       </div>
                     </>
                   ) : (
-                    // AI message layout - rounded box with icon inside top left
+                    // AI message layout
                     <>
                       <div className="flex-1">
-                        <div className="bg-transparent border border-gray-200 rounded-3xl p-10 relative">
+                        <div className="ai-message-container">
                           {/* Icon inside the box, top left */}
-                          <div className="absolute top-8 left-8 w-12 h-12">
+                          <div className="ai-icon">
                             <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
                               {/* Background wave (tinted down) */}
                               <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
@@ -737,8 +440,8 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                             </svg>
                           </div>
                           
-                          {/* Message content with left padding to account for icon */}
-                          <div className="pl-20 text-slate-600 leading-relaxed text-lg font-normal">
+                          {/* Message content */}
+                          <div className="message-content">
                             {message.content}
                           </div>
                           
@@ -751,7 +454,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <button
                                   onClick={() => fileInputRef.current?.click()}
-                                  className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                  className="quick-action-btn"
                                 >
                                   <div className="flex items-start space-x-3">
                                     <Upload className="w-6 h-6" style={{color: '#0068A3'}} />
@@ -769,7 +472,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                                     setInputValue("I'm looking for mental health nursing roles");
                                     document.querySelector('textarea').focus();
                                   }}
-                                  className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                  className="quick-action-btn"
                                 >
                                   <div className="flex items-start space-x-3">
                                     <Heart className="w-6 h-6" style={{color: '#0068A3'}} />
@@ -787,7 +490,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                                     setInputValue("Show me support worker positions for learning disabilities");
                                     document.querySelector('textarea').focus();
                                   }}
-                                  className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                  className="quick-action-btn"
                                 >
                                   <div className="flex items-start space-x-3">
                                     <User className="w-6 h-6" style={{color: '#0068A3'}} />
@@ -805,7 +508,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                                     setInputValue("I'm new to healthcare - what entry level positions are available?");
                                     document.querySelector('textarea').focus();
                                   }}
-                                  className="bg-white hover:bg-gray-50 border border-gray-200 rounded-full p-4 text-left transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group"
+                                  className="quick-action-btn"
                                 >
                                   <div className="flex items-start space-x-3">
                                     <Sparkles className="w-6 h-6" style={{color: '#0068A3'}} />
@@ -823,11 +526,11 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
 
                           {/* Job Cards */}
                           {message.matchingJobs && message.matchingJobs.length > 0 && (
-                            <div className="pl-20 mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="jobs-grid">
                               {sampleJobs
                                 .filter(job => message.matchingJobs.includes(job.id))
                                 .map(job => (
-                                  <div key={job.id} className="bg-white border border-gray-200 rounded-2xl p-4 hover:border-gray-300 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-sm group">
+                                  <div key={job.id} className="job-card-container">
                                     <div className="flex justify-between items-start mb-3">
                                       <div className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
                                         {job.category}
@@ -885,11 +588,10 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
           
           {/* Loading indicator */}
           {isLoading && (
-            <div className="flex justify-start animate-fade-in-up" style={{ animation: 'fadeInUp 0.5s ease-out forwards' }}>
-              <div className="bg-transparent border border-gray-200 rounded-3xl p-10 relative">
-                <div className="absolute top-8 left-8 w-12 h-12">
+            <div className="flex justify-start animate-fade-in-up">
+              <div className="ai-message-container">
+                <div className="ai-icon">
                   <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-                    {/* Background wave (tinted down) */}
                     <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
                           stroke="#3b82f6" 
                           strokeWidth="8" 
@@ -897,7 +599,6 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                           strokeLinecap="round"
                           opacity="0.2"/>
                     
-                    {/* Animated wave */}
                     <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
                           stroke="#3b82f6" 
                           strokeWidth="8" 
@@ -914,10 +615,10 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                     </path>
                   </svg>
                 </div>
-                <div className="pl-20 flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                <div className="message-content loading-dots">
+                  <div className="loading-dot"></div>
+                  <div className="loading-dot"></div>
+                  <div className="loading-dot"></div>
                 </div>
               </div>
             </div>
@@ -928,19 +629,16 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
       </div>
 
       {/* Input Area - Fixed/Floating at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 p-12 pb-16 bg-transparent z-50">
-        <div className="relative max-w-4xl mx-auto">
+      <div className="input-container">
+        <div className="input-wrapper">
           <textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Ask about healthcare roles, locations, or get career advice..."
-            className="w-full resize-none rounded-full px-6 py-6 pr-32 focus:outline-none bg-white text-slate-700 placeholder-slate-400 text-sm shadow-sm border-2 border-white"
+            className="chat-textarea chat-input"
             style={{
-              minHeight: '72px',
-              maxHeight: Math.min(window.innerHeight * 0.2, 140) + 'px',
-              boxShadow: '0 0 0 2px white, 0 0 20px rgba(117, 205, 214, 0.3)',
-              animation: 'pulse-glow 2s ease-in-out infinite alternate'
+              maxHeight: Math.min(window.innerHeight * 0.2, 140) + 'px'
             }}
             disabled={isLoading}
             onInput={(e) => {
@@ -949,32 +647,6 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
               e.target.style.height = Math.min(e.target.scrollHeight, maxHeight) + 'px';
             }}
           />
-          
-          <style jsx>{`
-            @keyframes pulse-glow {
-              0% {
-                box-shadow: 0 0 0 2px white, 0 0 20px rgba(117, 205, 214, 0.3);
-              }
-              100% {
-                box-shadow: 0 0 0 2px white, 0 0 30px rgba(117, 205, 214, 0.6);
-              }
-            }
-            
-            @keyframes fadeInUp {
-              0% {
-                opacity: 0;
-                transform: translateY(20px);
-              }
-              100% {
-                opacity: 1;
-                transform: translateY(0);
-              }
-            }
-            
-            .animate-fade-in-up {
-              animation: fadeInUp 0.5s ease-out forwards;
-            }
-          `}</style>
           
           {/* Hidden file input */}
           <input
@@ -985,8 +657,8 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
             className="hidden"
           />
           
-          {/* Button container - positioned to align with textarea center */}
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+          {/* Button container */}
+          <div className="input-buttons">
             {/* CV Upload Button */}
             <button
               onClick={() => fileInputRef.current?.click()}
@@ -999,9 +671,8 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
               
               {/* Tooltip */}
               {showTooltip && (
-                <div className="absolute right-0 bottom-full mb-2 bg-slate-600 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap text-xs z-50">
+                <div className="tooltip">
                   Upload your CV for personalized matches
-                  <div className="absolute top-full right-4 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-slate-600"></div>
                 </div>
               )}
             </button>
@@ -1020,10 +691,8 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
 
       {/* Job Modal */}
       {showJobModal && selectedJob && (
-        <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-        >
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-xl border border-sky-100">
+        <div className="modal-overlay">
+          <div className="modal-content">
             <div className="p-6">
               <div className="flex justify-between items-start mb-6">
                 <div>
