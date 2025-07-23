@@ -297,7 +297,8 @@
   width: 100%;
   resize: none;
   border-radius: 9999px;
-  padding: 24px;
+  padding-left: 24px;
+  padding-top: 24px;
   padding-right: 128px;
   outline: none;
   background: white;
@@ -314,7 +315,7 @@
 .input-buttons {
   position: absolute;
   right: 16px;
-  top: 50%;
+  top: 46%;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
