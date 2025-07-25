@@ -439,7 +439,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                           {message.type === 'user' ? (
                             <>
                               <div className="flex-1 text-right">
-                                <div className="inline-block bg-blue-500 text-white px-6 py-4 rounded-2xl shadow-lg">
+                                <div className="inline-block user-message-bubble px-6 py-4 shadow-lg">
                                   <div className="text-lg leading-relaxed">
                                     {message.content}
                                   </div>
