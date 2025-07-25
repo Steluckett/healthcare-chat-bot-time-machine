@@ -426,7 +426,7 @@
 }
 
 .input-container-inner {
-    align-items: flex-end;
+    align-items: center;
     display: flex;
     gap: 1rem;
     padding: 1rem;
