@@ -402,7 +402,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                 translateZ = distance * 150;
                 translateY = -distance * 60;
                 scale = Math.max(0.6, 1 - (distance * 0.1));
-                opacity = Math.max(0.005, 1 - (distance * 0.25));
+                opacity = Math.max(0.001, 1 - (distance * 0.25));
                 blur = Math.min(6, distance * 1.5);
                 rotateX = Math.min(15, distance * 3);
               } else {
