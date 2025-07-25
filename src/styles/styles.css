@@ -187,12 +187,6 @@
   transition: all 0.3s ease;
 }
 
-.ai-message-content:hover {
-  background: #ffffff8a;
-  border-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2), 0 0 40px rgba(255,255,255,0.2);
-}
-
 .ai-message-text {
   color: #fff;
   line-height: 1.6;
@@ -377,7 +371,7 @@
 .progress-track {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 9999px;
-  height: 0.25rem;
+  height: 0.1rem;
 }
 
 .progress-bar {
