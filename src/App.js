@@ -450,7 +450,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                                   {/* Background wave (tinted white) */}
                                   <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
                                         stroke="currentColor" 
-                                        strokeWidth="5" 
+                                        strokeWidth="12" 
                                         fill="none"
                                         strokeLinecap="round"
                                         opacity="0.4"/>
@@ -458,7 +458,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                                   {/* Animated wave (pure white) */}
                                   <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
                                         stroke="white" 
-                                        strokeWidth="5" 
+                                        strokeWidth="18" 
                                         fill="none"
                                         strokeLinecap="round">
                                     <animate attributeName="stroke-dasharray" 
