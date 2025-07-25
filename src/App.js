@@ -371,7 +371,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
   };
 
   return (
-    <div className="relative w-full h-screen bg-gradient-to-br from-slate-50 to-blue-50 overflow-hidden">
+    <div className="relative w-full h-screen bg-transparent overflow-hidden">
       {/* 3D Messages Container - Only show when messages exist */}
       {messages.length > 0 && (
         <div 
