@@ -176,6 +176,100 @@ const TimeMachineHealthcareChat = () => {
     }
   };
 
+  const buildConversationHistory = () => {
+    const systemPrompt = `You are an experienced healthcare recruitment specialist working for Cygnet Group, the UK's leading independent provider of mental health and learning disabilities services. You have deep knowledge of healthcare careers and are genuinely passionate about helping people find meaningful work in healthcare.
+
+ABOUT CYGNET GROUP:
+- Leading independent provider of mental health and learning disabilities services in the UK
+- Over 150 services across England and Wales
+- Specializes in acute mental health, CAMHS, learning disabilities, neurological and complex care
+- Part of Universal Health Services (UHS) - Fortune 500 company
+- Award-winning employer with excellent training and career progression
+- Strong focus on person-centered care and recovery-focused approaches
+- Committed to staff development with comprehensive training programs
+- Offers competitive salaries, excellent benefits, and flexible working arrangements
+
+AVAILABLE JOBS:
+${JSON.stringify(sampleJobs, null, 2)}
+
+WHEN TO SHOW JOBS:
+Show job IDs when the user is asking about:
+- Specific roles or job types
+- Career opportunities or job searching
+- Salary, benefits, or working conditions
+- Training or qualifications needed
+- Locations for work
+- "What jobs are available" or similar
+
+DO NOT show jobs when the user is asking about:
+- General company information (history, services, values)
+- How to apply or application process
+- General healthcare industry questions
+- Personal experiences or stories
+- Casual greetings or thanks
+- Non-career related topics
+
+JOB MATCHING RULES (when jobs should be shown):
+- If they mention "mental health" or "nursing" → show jobs 1, 3, 5 (Mental Health Nurse, Clinical Psychologist, Mental Health Support Worker)
+- If they mention "support worker" or "learning disabilities" → show jobs 2, 5 (Support Worker LD, Mental Health Support Worker)
+- If they mention "entry level", "no experience", "new to healthcare" → show jobs 2, 4, 5 (Support Worker, Healthcare Assistant, Mental Health Support Worker)
+- If they mention "clinical", "psychologist", "therapy" → show jobs 3, 6 (Clinical Psychologist, Occupational Therapist)
+- If they mention "part-time" or "flexible" → show jobs 4, 6 (Healthcare Assistant, Occupational Therapist)
+- If they mention specific locations → show jobs in/near that location
+- If they ask about salary/benefits → show jobs 1, 3, 6 (different salary ranges)
+- If they ask about training → show jobs 2, 4, 5 (mention training provided)
+
+CONVERSATION STYLE:
+- Be warm, encouraging, and genuinely helpful
+- Keep responses to 2-3 sentences maximum unless explaining company info
+- Don't list job details - the job tiles will show everything
+- Be enthusiastic about opportunities when relevant
+- Ask one follow-up question to keep conversation flowing
+
+RESPONSE FORMAT:
+Respond with a JSON object containing:
+{
+  "response": "Brief, encouraging response (2-3 sentences max)",
+  "matchingJobs": [array of job IDs that match their query - ONLY if they're asking about jobs/careers],
+  "followUpQuestions": [optional single follow-up question]
+}
+
+Your entire response MUST be valid JSON. Only include job IDs when the user is specifically asking about careers or job opportunities.`;
+
+    const conversationMessages = [];
+    
+    // Add system message
+    conversationMessages.push({
+      role: 'system',
+      content: systemPrompt
+    });
+    
+    // Add recent conversation history (last 6 messages)
+    const recentMessages = messages.slice(-6);
+    
+    recentMessages.forEach(msg => {
+      if (msg.type === 'user') {
+        conversationMessages.push({
+          role: 'user',
+          content: msg.content
+        });
+      } else if (msg.type === 'ai') {
+        conversationMessages.push({
+          role: 'assistant',
+          content: msg.content
+        });
+      }
+    });
+    
+    // Add current user message
+    conversationMessages.push({
+      role: 'user',
+      content: inputValue
+    });
+    
+    return conversationMessages;
+  };
+
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
@@ -190,42 +284,83 @@ const TimeMachineHealthcareChat = () => {
     setInputValue('');
     setIsLoading(true);
 
-    // Simulate AI response using your existing logic
-    setTimeout(() => {
-      const matchingJobs = analyzeUserInput(inputValue);
-      
-      const responses = [
-        {
-          content: "Great! I found several mental health nursing positions that match your interests. These roles offer excellent career development and training opportunities.",
-          matchingJobs: [1, 3]
+    try {
+      // Enhanced OpenAI API call
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
         },
-        {
-          content: "Wonderful! Support worker roles are incredibly rewarding. You'll be making a real difference in people's lives while receiving comprehensive training.",
-          matchingJobs: [2]
-        },
-        {
-          content: "Excellent question! Cygnet Group offers competitive salaries, excellent benefits, flexible working arrangements, and outstanding career progression opportunities.",
-          matchingJobs: [1, 2, 3]
-        },
-        {
-          content: "I'm here to help you discover amazing healthcare opportunities with Cygnet Group. What type of role interests you most?",
-          matchingJobs: matchingJobs.length > 0 ? matchingJobs : [1, 2, 4]
-        }
-      ];
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: buildConversationHistory(),
+          max_tokens: 600,
+          temperature: 0.7,
+          top_p: 0.9,
+          frequency_penalty: 0.1,
+          presence_penalty: 0.1,
+        }),
+      });
 
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+      const data = await response.json();
       
+      if (data.error) {
+        throw new Error(data.error.message);
+      }
+
+      const aiResponseText = data.choices[0].message.content;
+      
+      // Parse JSON response
+      let aiResponse;
+      try {
+        aiResponse = JSON.parse(aiResponseText);
+      } catch (parseError) {
+        console.warn('Failed to parse AI response as JSON:', aiResponseText);
+        // Use backup logic for job matching
+        const backupJobs = analyzeUserInput(inputValue);
+        aiResponse = {
+          response: aiResponseText,
+          matchingJobs: backupJobs,
+          followUpQuestions: []
+        };
+      }
+
+      // Ensure we show jobs only when relevant (updated backup safety net)
+      if (!aiResponse.matchingJobs || aiResponse.matchingJobs.length === 0) {
+        console.log('No jobs in AI response, applying backup logic');
+        aiResponse.matchingJobs = analyzeUserInput(inputValue);
+      }
+
       const aiMessage = {
         id: Date.now() + 1,
         type: 'ai',
-        content: randomResponse.content,
-        matchingJobs: randomResponse.matchingJobs,
+        content: aiResponse.response,
+        matchingJobs: aiResponse.matchingJobs,
+        followUpQuestions: aiResponse.followUpQuestions || [],
         timestamp: new Date()
       };
 
       setMessages(prev => [aiMessage, ...prev]);
-      setIsLoading(false);
-    }, 1000);
+
+    } catch (error) {
+      console.error('Error getting AI response:', error);
+      
+      // Enhanced fallback with flexible job matching
+      const fallbackJobs = analyzeUserInput(inputValue);
+      
+      const errorMessage = {
+        id: Date.now() + 1,
+        type: 'ai',
+        content: "I'm here to help you with information about Cygnet Group and our healthcare opportunities. What would you like to know?",
+        matchingJobs: fallbackJobs,
+        followUpQuestions: ["Are you interested in learning about our available roles?"],
+        timestamp: new Date()
+      };
+      setMessages(prev => [errorMessage, ...prev]);
+    }
+
+    setIsLoading(false);
   };
 
   const handleKeyPress = (e) => {
