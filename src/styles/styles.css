@@ -1,31 +1,31 @@
-/* src/styles/styles.css */
+/* src/styles/styles.css - Enhanced for Blue Gradient Background */
 
 /* Animation keyframes */
 @keyframes pulse-glow {
   0% {
     box-shadow: 
       0 0 0 2px white,
-      0 0 8px rgba(24, 57, 105, 0.3),
-      0 0 16px rgba(24, 57, 105, 0.2),
-      0 0 24px rgba(136, 246, 255, 0.4),
-      0 0 32px rgba(136, 246, 255, 0.2);
+      0 0 8px rgba(255, 255, 255, 0.3),
+      0 0 16px rgba(255, 255, 255, 0.2),
+      0 0 24px rgba(255, 255, 255, 0.4),
+      0 0 32px rgba(255, 255, 255, 0.2);
   }
   50% {
     box-shadow: 
       0 0 0 2px white,
-      0 0 20px rgba(24, 57, 105, 0.6),
-      0 0 40px rgba(24, 57, 105, 0.4),
-      0 0 60px rgba(136, 246, 255, 0.8),
-      0 0 80px rgba(136, 246, 255, 0.4),
+      0 0 20px rgba(255, 255, 255, 0.6),
+      0 0 40px rgba(255, 255, 255, 0.4),
+      0 0 60px rgba(255, 255, 255, 0.8),
+      0 0 80px rgba(255, 255, 255, 0.4),
       0 0 100px rgba(255, 255, 255, 0.2);
   }
   100% {
     box-shadow: 
       0 0 0 2px white,
-      0 0 8px rgba(24, 57, 105, 0.3),
-      0 0 16px rgba(24, 57, 105, 0.2),
-      0 0 24px rgba(136, 246, 255, 0.4),
-      0 0 32px rgba(136, 246, 255, 0.2);
+      0 0 8px rgba(255, 255, 255, 0.3),
+      0 0 16px rgba(255, 255, 255, 0.2),
+      0 0 24px rgba(255, 255, 255, 0.4),
+      0 0 32px rgba(255, 255, 255, 0.2);
   }
 }
 
@@ -87,40 +87,42 @@
   backface-visibility: hidden;
 }
 
-/* Custom input styles */
+/* Custom input styles - Enhanced for blue background */
 .chat-input {
   animation: pulse-glow 4s ease-in-out infinite;
   box-shadow: 
     0 0 0 2px white,
-    0 0 8px rgba(24, 57, 105, 0.3),
-    0 0 16px rgba(24, 57, 105, 0.2),
-    0 0 24px rgba(136, 246, 255, 0.4),
-    0 0 32px rgba(136, 246, 255, 0.2);
+    0 0 8px rgba(255, 255, 255, 0.3),
+    0 0 16px rgba(255, 255, 255, 0.2),
+    0 0 24px rgba(255, 255, 255, 0.4),
+    0 0 32px rgba(255, 255, 255, 0.2);
 }
 
-/* Time machine navigation UI */
+/* Time machine navigation UI - Enhanced for blue background */
 .time-nav-indicator {
   backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(255, 255, 255, 0.8);
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
   transition: all 0.3s ease;
+  border-radius: 24px;
 }
 
 .time-nav-indicator:hover {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(255, 255, 255, 0.9);
   transform: translateY(-1px);
 }
 
 .time-progress-bar {
-  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(90deg, #ffffff, #f8fafc);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
   transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Enhanced message bubble styles for time machine */
+/* Enhanced message bubble styles for time machine on blue background */
 .message-bubble-3d {
   transform-style: preserve-3d;
   transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
@@ -138,7 +140,7 @@
   margin: 0 auto;
   background: transparent;
   min-height: 100vh;
-  padding-bottom: 200px; /* Space for fixed input */
+  padding-bottom: 200px;
 }
 
 .messages-container {
@@ -146,7 +148,6 @@
   padding-bottom: 40px;
 }
 
-/* Message bubbles should stack vertically from top, newest at bottom */
 .messages-list {
   display: flex;
   flex-direction: column;
@@ -158,20 +159,20 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: rgba(255, 255, 255, 0.3);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: rgba(255, 255, 255, 0.5);
 }
 
-/* Enhanced job card hover effects for 3D */
+/* Enhanced job card hover effects for 3D on blue background */
 .job-card {
   transition: all 0.3s ease;
   transform-style: preserve-3d;
@@ -180,8 +181,8 @@
 .job-card:hover {
   transform: scale(1.02) translateZ(5px);
   box-shadow: 
-    0 8px 25px rgba(0, 0, 0, 0.15),
-    0 0 20px rgba(59, 130, 246, 0.1);
+    0 8px 25px rgba(0, 0, 0, 0.2),
+    0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 /* Enhanced button hover effects */
@@ -193,39 +194,54 @@
 .btn-primary:hover {
   transform: translateY(-2px) translateZ(5px);
   box-shadow: 
-    0 6px 20px rgba(0, 0, 0, 0.15),
-    0 0 15px rgba(59, 130, 246, 0.2);
+    0 6px 20px rgba(0, 0, 0, 0.2),
+    0 0 15px rgba(255, 255, 255, 0.2);
 }
 
-/* Message bubble styles */
+/* Message bubble styles - Enhanced for blue background */
 .message-bubble {
   max-width: 85%;
 }
 
+/* User message bubbles - Enhanced for blue background */
 .user-message {
-  color: #0068A3;
+  color: white;
 }
 
+/* User message bubble styling */
+.user-message-bubble {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #1e293b !important;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* AI message container - Enhanced for blue background */
 .ai-message-container {
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(229, 231, 235, 0.5);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.8);
   border-radius: 24px;
   padding: 40px;
   position: relative;
   box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    0 15px 50px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
   transition: all 0.3s ease;
+  color: #1e293b;
 }
 
 .ai-message-container:hover {
   background: rgba(255, 255, 255, 0.98);
-  border-color: rgba(59, 130, 246, 0.2);
+  border-color: rgba(255, 255, 255, 0.9);
   box-shadow: 
-    0 15px 50px rgba(0, 0, 0, 0.15),
-    0 0 30px rgba(59, 130, 246, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    0 20px 60px rgba(0, 0, 0, 0.2),
+    0 0 40px rgba(255, 255, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 /* Icon positioning */
@@ -239,32 +255,33 @@
 
 .message-content {
   padding-left: 80px;
-  color: #64748b;
+  color: #1e293b;
   line-height: 1.6;
   font-size: 18px;
-  font-weight: 300;
+  font-weight: 400;
   font-family: "figtree";
 }
 
-/* Quick action buttons with enhanced 3D effects */
+/* Quick action buttons with enhanced 3D effects for blue background */
 .quick-action-btn {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(229, 231, 235, 0.5);
-  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
   padding: 16px;
   text-align: left;
   transition: all 0.3s ease;
   transform-style: preserve-3d;
+  color: #1e293b;
 }
 
 .quick-action-btn:hover {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   transform: scale(1.05) translateZ(5px);
   box-shadow: 
-    0 8px 25px rgba(0, 0, 0, 0.1),
-    0 0 20px rgba(59, 130, 246, 0.1);
-  border-color: rgba(59, 130, 246, 0.2);
+    0 12px 35px rgba(0, 0, 0, 0.15),
+    0 0 30px rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.9);
 }
 
 /* Job cards grid */
@@ -276,27 +293,28 @@
   gap: 16px;
 }
 
-/* Individual job card with 3D enhancements */
+/* Individual job card with 3D enhancements for blue background */
 .job-card-container {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(229, 231, 235, 0.5);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.8);
   border-radius: 16px;
   padding: 16px;
   transition: all 0.3s ease;
   transform-style: preserve-3d;
+  color: #1e293b;
 }
 
 .job-card-container:hover {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(59, 130, 246, 0.2);
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(255, 255, 255, 0.9);
   transform: scale(1.05) translateZ(10px);
   box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.15),
-    0 0 25px rgba(59, 130, 246, 0.1);
+    0 15px 40px rgba(0, 0, 0, 0.2),
+    0 0 35px rgba(255, 255, 255, 0.15);
 }
 
-/* Loading animation with 3D effects */
+/* Loading animation with 3D effects for blue background */
 .loading-dots {
   display: flex;
   align-items: center;
@@ -306,10 +324,10 @@
 .loading-dot {
   width: 8px;
   height: 8px;
-  background: linear-gradient(45deg, #60a5fa, #3b82f6);
+  background: linear-gradient(45deg, #ffffff, #f1f5f9);
   border-radius: 50%;
   animation: bounce3D 1.4s ease-in-out infinite both;
-  box-shadow: 0 2px 4px rgba(96, 165, 250, 0.4);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.4);
 }
 
 .loading-dot:nth-child(1) { animation-delay: -0.32s; }
@@ -324,12 +342,12 @@
   }
 }
 
-/* Enhanced modal styles with backdrop */
+/* Enhanced modal styles with backdrop for blue background */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -345,24 +363,25 @@
   }
   100% {
     opacity: 1;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(12px);
   }
 }
 
 .modal-content {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
-  border-radius: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 24px;
   max-width: 672px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.2),
-    0 0 40px rgba(59, 130, 246, 0.1),
+    0 30px 60px rgba(0, 0, 0, 0.25),
+    0 0 50px rgba(255, 255, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(224, 242, 254, 0.5);
   animation: modalSlideIn 0.4s ease-out;
+  color: #1e293b;
 }
 
 @keyframes modalSlideIn {
@@ -376,22 +395,24 @@
   }
 }
 
-/* Enhanced tooltip styles */
+/* Enhanced tooltip styles for blue background */
 .tooltip {
   position: absolute;
   right: 0;
   bottom: 100%;
   margin-bottom: 8px;
-  background: rgba(71, 85, 105, 0.95);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  color: white;
+  color: #1e293b;
   padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   box-shadow: 
-    0 8px 25px rgba(0, 0, 0, 0.2),
-    0 0 15px rgba(59, 130, 246, 0.1);
+    0 12px 35px rgba(0, 0, 0, 0.2),
+    0 0 20px rgba(255, 255, 255, 0.1);
   white-space: nowrap;
   font-size: 12px;
+  font-weight: 500;
   z-index: 50;
   animation: tooltipFadeIn 0.2s ease-out;
 }
@@ -416,10 +437,10 @@
   height: 0;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  border-top: 4px solid rgba(71, 85, 105, 0.95);
+  border-top: 4px solid rgba(255, 255, 255, 0.95);
 }
 
-/* Enhanced input area styles */
+/* Enhanced input area styles for blue background */
 .input-container {
   position: fixed;
   bottom: 0;
@@ -429,11 +450,11 @@
   padding-bottom: 64px;
   background: transparent;
   z-index: 50;
-  pointer-events: none; /* Allow clicks to pass through the container */
+  pointer-events: none;
 }
 
 .input-wrapper {
-  pointer-events: all; /* Re-enable clicks for the actual input area */
+  pointer-events: all;
   position: relative;
   max-width: 1024px;
   margin: 0 auto;
@@ -448,27 +469,29 @@
   padding-right: 128px;
   outline: none;
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  color: #334155;
+  backdrop-filter: blur(15px);
+  color: #1e293b;
   min-height: 72px;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  border: 2px solid rgba(255, 255, 255, 0.5);
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.8);
   transition: all 0.3s ease;
+  font-weight: 400;
 }
 
 .chat-textarea:focus {
   background: rgba(255, 255, 255, 0.98);
-  border-color: rgba(59, 130, 246, 0.3);
+  border-color: rgba(255, 255, 255, 0.9);
   box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.15),
-    0 0 30px rgba(59, 130, 246, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    0 15px 50px rgba(0, 0, 0, 0.2),
+    0 0 40px rgba(255, 255, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .chat-textarea::placeholder {
-  color: #94a3b8;
+  color: #64748b;
+  font-weight: 400;
 }
 
 .input-buttons {
@@ -481,12 +504,12 @@
   gap: 8px;
 }
 
-/* CV status with enhanced glass effect */
+/* CV status with enhanced glass effect for blue background */
 .cv-status {
-  background: rgba(236, 253, 245, 0.9);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(209, 250, 229, 0.5);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
   padding: 16px;
   display: flex;
   align-items: center;
@@ -494,9 +517,10 @@
   margin-top: 16px;
   margin-bottom: 8px;
   box-shadow: 
-    0 8px 32px rgba(16, 185, 129, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
   animation: slideInFromRight 0.5s ease-out;
+  color: #1e293b;
 }
 
 @keyframes slideInFromRight {
