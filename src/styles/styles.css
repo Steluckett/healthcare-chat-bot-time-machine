@@ -426,11 +426,12 @@
 }
 
 .input-container-inner {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  gap: 1rem;
-  padding: 1rem;
+    align-items: flex-end;
+    display: flex;
+    gap: 1rem;
+    padding-left: 2rem;
+    position: relative;
+    padding-bottom: 1.3rem;
 }
 
 .chat-input {
@@ -447,7 +448,7 @@
 }
 
 .chat-input::placeholder {
-  color: #fff;
+  color: #ffffff66;
 }
 
 .chat-input:focus {
