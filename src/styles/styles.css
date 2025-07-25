@@ -188,7 +188,7 @@
 }
 
 .ai-message-content:hover {
-  background: rgba(255, 255, 255, 0.98);
+  background: #ffffff8a;
   border-color: rgba(255, 255, 255, 0.9);
   box-shadow: 0 20px 60px rgba(0,0,0,0.2), 0 0 40px rgba(255,255,255,0.2);
 }
@@ -283,7 +283,7 @@
 
 .job-view-button {
   width: 100%;
-  background: #10b981;
+  background: #005994;
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -429,9 +429,8 @@
     align-items: flex-end;
     display: flex;
     gap: 1rem;
-    padding-left: 2rem;
+    padding: 1rem;
     position: relative;
-    padding-bottom: 1.3rem;
 }
 
 .chat-input {
