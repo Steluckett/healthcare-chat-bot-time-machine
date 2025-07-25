@@ -447,14 +447,27 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                             <>
                               <div className="ai-avatar">
                                 <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="ai-avatar-icon">
-                                  <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200" 
+                                  {/* Background wave (tinted white) */}
+                                  <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
                                         stroke="currentColor" 
-                                        strokeWidth="12" 
+                                        strokeWidth="5" 
+                                        fill="none"
+                                        strokeLinecap="round"
+                                        opacity="0.4"/>
+                                  
+                                  {/* Animated wave (pure white) */}
+                                  <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
+                                        stroke="white" 
+                                        strokeWidth="5" 
                                         fill="none"
                                         strokeLinecap="round">
                                     <animate attributeName="stroke-dasharray" 
-                                             values="0,1000;300,1000;0,1000" 
-                                             dur="2s" 
+                                             values="0,2000;400,2000;0,2000" 
+                                             dur="3s" 
+                                             repeatCount="indefinite"/>
+                                    <animate attributeName="stroke-dashoffset" 
+                                             values="0;-400;-800" 
+                                             dur="3s" 
                                              repeatCount="indefinite"/>
                                   </path>
                                 </svg>
@@ -517,14 +530,27 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                       <div className="ai-message-layout">
                         <div className="ai-avatar">
                           <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" className="ai-avatar-icon">
-                            <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200" 
+                            {/* Background wave (tinted white) */}
+                            <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
                                   stroke="currentColor" 
-                                  strokeWidth="12" 
+                                  strokeWidth="5" 
+                                  fill="none"
+                                  strokeLinecap="round"
+                                  opacity="0.4"/>
+                            
+                            {/* Animated wave (pure white) */}
+                            <path d="M-200 200 Q -100 50, 0 200 Q 100 350, 200 200 Q 300 50, 400 200 Q 500 350, 600 200 Q 700 50, 800 200" 
+                                  stroke="white" 
+                                  strokeWidth="5" 
                                   fill="none"
                                   strokeLinecap="round">
                               <animate attributeName="stroke-dasharray" 
-                                       values="0,1000;300,1000;0,1000" 
-                                       dur="2s" 
+                                       values="0,2000;400,2000;0,2000" 
+                                       dur="3s" 
+                                       repeatCount="indefinite"/>
+                              <animate attributeName="stroke-dashoffset" 
+                                       values="0;-400;-800" 
+                                       dur="3s" 
                                        repeatCount="indefinite"/>
                             </path>
                           </svg>
