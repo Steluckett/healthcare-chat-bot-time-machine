@@ -402,7 +402,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                 translateZ = distance * 150;
                 translateY = -distance * 60;
                 scale = Math.max(0.6, 1 - (distance * 0.1));
-                opacity = Math.max(0.2, 1 - (distance * 0.25));
+                opacity = Math.max(0.005, 1 - (distance * 0.25));
                 blur = Math.min(6, distance * 1.5);
                 rotateX = Math.min(15, distance * 3);
               } else {
@@ -410,7 +410,7 @@ Your entire response MUST be valid JSON. Only include job IDs when the user is s
                 translateZ = -distance * 200;
                 translateY = distance * 80;
                 scale = Math.max(0.4, 1 - (distance * 0.2));
-                opacity = Math.max(0.01, 1 - (distance * 0.6)); // Much more transparent for older messages
+                opacity = Math.max(0.001, 1 - (distance * 0.6)); // Much more transparent for older messages
                 blur = Math.min(15, distance * 3);
                 rotateX = -Math.min(20, distance * 4);
               }
